@@ -11,14 +11,15 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 
 class SecondView extends Component {
-  static navigationOptions = {
-    title: 'Second View'
-  };
+  static navigationOptions = ({ navigation }) => ({
+    title: ` This is from <${navigation.state.params.txt}>`
+  });
   render() {
+    const { params } = this.props.navigation.state;
     return (
       <View>
         <Text>
-          This is the Second View !!!
+          This is the Second View !!! {params.txt}
         </Text>
       </View>
     );

@@ -24,7 +24,7 @@ class App extends Component {
           Initial Setting
         </Text>
         <Button
-          onPress={() => navigate('SecVw' )}
+          onPress={() => navigate('SecVw', { txt: 'from mom' })}
           title="Let's go to Second view title... ? "
         />
       </View>
