@@ -9,9 +9,11 @@
 
 import { StackNavigator } from 'react-navigation';
 import App from './App';
+import SecondView from './Compo/SecondView';
 
 const AppWithNavigator = StackNavigator({
-  Home: { screen: App }
+  Home: { screen: App },
+  SecVw: { screen: SecondView }
 });
 
 export default AppWithNavigator;
