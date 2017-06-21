@@ -8,9 +8,9 @@
  */
 
 import { combineReducers } from 'redux';
-import rdxMainReducer from './rdxMainReducer';
+import mainReducer from './rdxMainReducer';
 
 export default combineReducers({
-  main: rdxMainReducer
+  main: mainReducer
 
 });

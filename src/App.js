@@ -15,6 +15,7 @@ import { Router, Scene } from 'react-native-router-flux';
 import reducers from './rdx-reducers';
 
 import SceneInitial from './Scenes/SceneInitial';
+import UXdebugMain from './ZdebugUX/UXdebugMain';
 
 class App extends Component {
   render() {
@@ -22,9 +23,8 @@ class App extends Component {
       <Provider store={createStore(reducers)}>
       <Router>
         <Scene key="root">
-          <Scene
-            key="sceneInitial" component={SceneInitial} title="Initial" initial hideNavBar
-          />
+          <Scene key="sceneInitial" component={SceneInitial} title="Initial" initial hideNavBar />
+          <Scene key="debugMainUX" component={UXdebugMain} title="Ux Test" hideNavBar />
         </Scene>
       </Router>
     </Provider>

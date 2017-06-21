@@ -10,7 +10,9 @@
 
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Image, LayoutAnimation,
-  TouchableOpacity, ActivityIndicator, Scroll } from 'react-native';
+  TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import { connect } from 'react-redux';
+import * as actions from '../rdx-actions';
 
 class UXdebugMain extends Component {
   constructor(props) {
@@ -37,16 +39,13 @@ class UXdebugMain extends Component {
 
   ////////////////////////////////////////////////////   _//////////////////_   render
   render() {
+    const { baseSty } = this.props.main;
+
     return (
         <ScrollView style={sty.scrollView} >
           {/* -------------------------  -------------------------  분리선.. ... */}
-
-
-          <Text> Initial Scene </Text>
-
+          <Text style={baseSty.txtTitle}> Initial Scene </Text>
         </ScrollView>
-
-
     );
   }
 }
@@ -54,23 +53,15 @@ class UXdebugMain extends Component {
 const sty = StyleSheet.create({
   scrollView: {
     flex: 100,
-    alignItems: 'stretch',
-    justifyContent: 'center',
-    backgroundColor: '#FFF0'
+    //alignItems: 'stretch', justifyContent: 'center',
   },
-  backgroundImage: {
-    alignItems: 'stretch', justifyContent: 'center', margin: 0, marginTop: 0,
-    flex: 1, alignSelf: 'stretch', width: null, height: null,
-    resizeMode: 'stretch', // or 'stretch'
-  },
-  bottom3button: {
-    flex: 5, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center',
-    marginHorizontal: 20
-  },
-  rowContainer: { flexDirection: 'row', alignSelf: 'stretch' },
-  seperateLine: { height: 2, backgroundColor: '#AAAAAA' },
-  bttnView: { flex: 3, alignItems: 'center' },
 });
 
-export default UXdebugMain;
+const mapStateToProps = (state) => {
+  return {
+    main: state.main,
+  };
+};
+
+export default connect(mapStateToProps, actions)(UXdebugMain);
 // connect() 에서 함수를 리턴하면 거기에 SceneConnect 를 전달함..

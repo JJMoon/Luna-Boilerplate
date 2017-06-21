@@ -11,8 +11,8 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Image, LayoutAnimation,
   TouchableOpacity, ActivityIndicator } from 'react-native';
+  import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
 import * as actions from '../rdx-actions';
 //const mdl = new M.SettingModule();
 
@@ -39,21 +39,27 @@ class SceneInitial extends Component {
   }
 
   componentDidMount() {
+    Actions.debugMainUX();
   }
 
   ////////////////////////////////////////////////////   _//////////////////_   render
   render() {
+    console.log('\n ====== ====== ====== ======  [[ SceneMain :: render ]]');
+    const { baseSty } = this.props.main;
+    console.log('render');
     return (
 
-        <View style={sty.seperateLine} >
-
+        <View style={sty.container} >
+          <View style={{ flex: 1 }} />
           {/* -------------------------  -------------------------  분리선.. ... */}
-
-          <Text> Initial Scene </Text>
-
+          <Text style={baseSty.txtTitle}>실제 받는 금액 비교 </Text>
+          <Text style={baseSty.txtNorm}> baseSty.txtNorm </Text>
+          <Text style={baseSty.txtSml}> 폰트 Size : 12 글자임... </Text>
+          <Text style={baseSty.txtNorm}> Norm  text ::  fontSize : 14 </Text>
+          <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
+          <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
+          <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
         </View>
-
-
     );
   }
 
@@ -72,7 +78,7 @@ class SceneInitial extends Component {
 
 const sty = StyleSheet.create({
   container: {
-    alignItems: 'stretch',
+    flex: 100, alignItems: 'stretch',
     justifyContent: 'center',
     backgroundColor: '#FFF0'
   },
