@@ -6,3 +6,6 @@
  *
  * Created by Jongwoo Moon on 2017. 6. 20..
  */
+
+
+export const setBleCompo = (payload) => { return { type: 'setBleCompo', payload }; };

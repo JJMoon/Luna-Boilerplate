@@ -8,26 +8,26 @@
  */
 
 import React, { Component } from 'react';
-import { View, Text, Button } from 'react-native';
-// import { NavigationActions } from 'react-navigation';
-// import SecondView from './Compo/SecondView';
+//import { View, Text, Button } from 'react-native';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import { Router, Scene } from 'react-native-router-flux';
+import reducers from './rdx-reducers';
+
+import SceneInitial from './Scenes/SceneInitial';
 
 class App extends Component {
-  static navigationOptions = {
-    title: 'Welcome'
-  };
   render() {
-    const { navigate } = this.props.navigation;
     return (
-      <View>
-        <Text>
-          Initial Setting
-        </Text>
-        <Button
-          onPress={() => navigate('SecVw', { txt: 'from mom' })}
-          title="Let's go to Second view title... ? "
-        />
-      </View>
+      <Provider store={createStore(reducers)}>
+      <Router>
+        <Scene key="root">
+          <Scene
+            key="sceneInitial" component={SceneInitial} title="Initial" initial hideNavBar
+          />
+        </Scene>
+      </Router>
+    </Provider>
     );
   }
 }

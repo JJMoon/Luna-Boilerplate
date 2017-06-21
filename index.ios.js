@@ -5,6 +5,6 @@
  */
 
 import { AppRegistry } from 'react-native';
-import AppWithNavigator from './src/AppWithNavigator';
+import App from './src/App';
 
-AppRegistry.registerComponent('lunaboilrplt', () => AppWithNavigator);
+AppRegistry.registerComponent('lunaboilrplt', () => App);
