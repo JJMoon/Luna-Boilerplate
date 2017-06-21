@@ -8,11 +8,12 @@
  */
 
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Button } from 'react-native';
 
 class SecondView extends Component {
   static navigationOptions = ({ navigation }) => ({
-    title: ` This is from <${navigation.state.params.txt}>`
+    title: ` This is from <${navigation.state.params.txt}>`,
+    headerRight: <Button title="Rght" onPress={() => console.log(' OK ')} />
   });
   render() {
     const { params } = this.props.navigation.state;
