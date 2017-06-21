@@ -2,7 +2,7 @@
  * React Native Boilerplate by MOOON
  * github.com/JJMoon/Luna-Boilerplate.git
  *
- * src / Scenes / sceneInitial.js
+ * src / ZdebugUX / UXdebugMain.js
  *
  * Created by Jongwoo Moon on 2017. 6. 21..
  */
@@ -10,24 +10,18 @@
 
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Image, LayoutAnimation,
-  TouchableOpacity, ActivityIndicator } from 'react-native';
-import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
-import * as actions from '../rdx-actions';
-//const mdl = new M.SettingModule();
+  TouchableOpacity, ActivityIndicator, Scroll } from 'react-native';
 
-class SceneInitial extends Component {
+class UXdebugMain extends Component {
   constructor(props) {
     super(props);
-    console.log('\n\n\n\n\n ====== ====== ====== ======  [[ SceneMain :: constructor ]] 앱 시작.....\n');
-    this.props.actInit();
+    console.log('\n\n\n\n\n ====== ====== ====== ======  [[ UXdebugMain  :: constructor ]]  .....\n');
     this.state = {
     };
   }
 
   ////////////////////////////////////////////////////   _//////////////////_   component life cycle
   componentWillUpdate() {
-    LayoutAnimation.easeInEaseOut(); //spring();
   }
 
   componentWillMount() {
@@ -44,34 +38,22 @@ class SceneInitial extends Component {
   ////////////////////////////////////////////////////   _//////////////////_   render
   render() {
     return (
-
-        <View style={sty.seperateLine} >
-
+        <ScrollView style={sty.scrollView} >
           {/* -------------------------  -------------------------  분리선.. ... */}
+
 
           <Text> Initial Scene </Text>
 
-        </View>
+        </ScrollView>
 
 
     );
   }
-
-  toggle() {
-    //console.log('toggle');
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
-  }
-
-  updateMenuState(isOpen) {
-    //console.log(`updateMenuState   >> isOpen ${isOpen}`);
-    this.setState({ isOpen, });
-  }
 }
 
 const sty = StyleSheet.create({
-  container: {
+  scrollView: {
+    flex: 100,
     alignItems: 'stretch',
     justifyContent: 'center',
     backgroundColor: '#FFF0'
@@ -90,11 +72,5 @@ const sty = StyleSheet.create({
   bttnView: { flex: 3, alignItems: 'center' },
 });
 
-const mapStateToProps = (state) => {
-  return {
-    main: state.main,
-  };
-};
-
-export default connect(mapStateToProps, actions)(SceneInitial);
+export default UXdebugMain;
 // connect() 에서 함수를 리턴하면 거기에 SceneConnect 를 전달함..
