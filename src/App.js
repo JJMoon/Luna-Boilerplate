@@ -14,6 +14,7 @@ import { Router, Scene } from 'react-native-router-flux';
 import reducers from './rdx-reducers';
 
 import SceneInitial from './Scenes/SceneInitial';
+import SceneEmailInput from './Scenes/SceneEmailInput';
 import UXdebugMain from './ZdebugUX/UXdebugMain';
 
 class App extends Component {
@@ -24,6 +25,7 @@ class App extends Component {
         <Scene key="root">
           <Scene key="sceneInitial" component={SceneInitial} title="Initial" initial hideNavBar />
           <Scene key="debugMainUX" component={UXdebugMain} title="Ux Test" hideNavBar />
+          <Scene key="authEmailInput" component={SceneEmailInput} title="Email Input" hideNavBar />
         </Scene>
       </Router>
     </Provider>

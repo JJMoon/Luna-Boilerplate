@@ -13,8 +13,10 @@ import { View, StyleSheet, Text, Image, LayoutAnimation,
   TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { Button } from 'react-native-elements';
+import { Actions } from 'react-native-router-flux';
 import * as actions from '../rdx-actions';
 import * as CL from '../Compo/MnColor';
+import NavigateView from '../Compo/NavigateView';
 
 class UXdebugMain extends Component {
   constructor(props) {
@@ -41,17 +43,24 @@ class UXdebugMain extends Component {
 
   ////////////////////////////////////////////////////   _//////////////////_   render
   render() {
-    const { baseSty } = this.props.main;
+    const { baseSty, scr } = this.props.main;
 
-    const spacer = <View style={{ flex: 2, margin: 5 }} />;
+    const spacer = <View style={{ padding: 10, backgroundColor: '#BCF' }} />;
+
+    const opt = { backBttnArrow: true, ratio: scr.unit };
+    const opt2 = { backBttnArrow: true, ratio: scr.unit,
+      rightBttn: { text: '전체동의', txtSty: baseSty.txtBig,
+      opt: { margin: 5, textAlign: 'left' } }
+    };
 
     return (
         <ScrollView style={sty.scrollView} >
-          {/* -------------------------  -------------------------  분리선.. ... */}
-          {spacer}
-          {spacer}
+          <NavigateView opt={opt}/>
 
-          <Text style={baseSty.txtTitle}> Initial Scene </Text>
+          <NavigateView opt={opt2}/>
+
+
+          <Text style={baseSty.txtTitle}> Initial Scene X </Text>
 
           {spacer}
 
@@ -59,8 +68,8 @@ class UXdebugMain extends Component {
             large
             buttonStyle={{ flex: 5, backgroundColor: CL.navy, borderRadius: 5 }}
             textStyle={{ textAlign: 'center' }}
-            title={'Go to sceneLogin'}
-            onPress={() => console.log(' Pressed !! ')}
+            title={'Go to scene Email Input'}
+            onPress={() => Actions.authEmailInput()}
           />
 
           {spacer}
@@ -80,7 +89,7 @@ class UXdebugMain extends Component {
 const sty = StyleSheet.create({
   scrollView: {
     flex: 100,
-    backgroundColor: '#DFF'
+    //backgroundColor: '#DFF'
     //alignItems: 'stretch', justifyContent: 'center',
   },
 });

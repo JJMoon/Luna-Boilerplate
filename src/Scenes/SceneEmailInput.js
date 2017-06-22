@@ -2,26 +2,24 @@
  * React Native Boilerplate by MOOON
  * github.com/JJMoon/Luna-Boilerplate.git
  *
- * src / Scenes / sceneInitial.js
+ * src / Scenes / SceneEmailInput.js
  *
- * Created by Jongwoo Moon on 2017. 6. 21..
+ * Created by Jongwoo Moon on 2017. 6. 22..
  */
 'use strict';
 
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Image, LayoutAnimation,
   TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+  import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import * as actions from '../rdx-actions';
-import StatusBar from '../Compo/StatusBar';
+import NavigateView from '../Compo/NavigateView';
 //const mdl = new M.SettingModule();
 
-class SceneInitial extends Component {
+class SceneEmailInput extends Component {
   constructor(props) {
     super(props);
-    console.log('\n\n\n\n\n ====== ====== ====== ======  [[ SceneMain :: constructor ]] 앱 시작.....\n');
-    this.props.actInit();
     this.state = {
     };
   }
@@ -40,7 +38,6 @@ class SceneInitial extends Component {
   }
 
   componentDidMount() {
-    Actions.debugMainUX();
   }
 
   ////////////////////////////////////////////////////   _//////////////////_   render
@@ -48,40 +45,33 @@ class SceneInitial extends Component {
     console.log('\n ====== ====== ====== ======  [[ SceneMain :: render ]]');
     const { baseSty } = this.props.main;
     console.log('render');
+
+    // NavigateView opt
+    const opt = { backBttnArrow: true };
+
     return (
         <View style={sty.container} >
-
-          <StatusBar />
+          <NavigateView
+            opt={opt}
+          />
           {/* -------------------------  -------------------------  분리선.. ... */}
-          <Text style={baseSty.txtTitle}>실제 받는 금액 비교 </Text>
-          <Text style={baseSty.txtNorm}> baseSty.txtNorm </Text>
-          <Text style={baseSty.txtSml}> 폰트 Size : 12 글자임... </Text>
-          <Text style={baseSty.txtNorm}> Norm  text ::  fontSize : 14 </Text>
-          <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
-          <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
-          <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
+          <Text style={{ height: 50 }}>실제 받는 금액 비교 </Text>
+          <Text style={{ height: 50 }}>실제 받는 금액 비교 </Text>
+          <Text style={{ height: 50 }}>실제 받는 금액 비교 </Text>
+          <Text style={{ height: 50 }}>실제 받는 금액 비교 </Text>
+
+
         </View>
     );
   }
 
-  toggle() {
-    //console.log('toggle');
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
-  }
-
-  updateMenuState(isOpen) {
-    //console.log(`updateMenuState   >> isOpen ${isOpen}`);
-    this.setState({ isOpen, });
-  }
 }
 
 const sty = StyleSheet.create({
   container: {
-    flex: 100, alignItems: 'stretch',
+    alignItems: 'stretch',
     justifyContent: 'center',
-    backgroundColor: '#FFF0'
+    backgroundColor: '#23F'
   },
   backgroundImage: {
     alignItems: 'stretch', justifyContent: 'center', margin: 0, marginTop: 0,
@@ -103,5 +93,5 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, actions)(SceneInitial);
+export default connect(mapStateToProps, actions)(SceneEmailInput);
 // connect() 에서 함수를 리턴하면 거기에 SceneConnect 를 전달함..
