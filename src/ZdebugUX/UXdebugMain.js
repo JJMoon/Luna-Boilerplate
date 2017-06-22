@@ -14,6 +14,7 @@ import { View, StyleSheet, Text, Image, LayoutAnimation,
 import { connect } from 'react-redux';
 import { Button } from 'react-native-elements';
 import * as actions from '../rdx-actions';
+import * as CL from '../Compo/MnColor';
 
 class UXdebugMain extends Component {
   constructor(props) {
@@ -47,11 +48,11 @@ class UXdebugMain extends Component {
           {/* -------------------------  -------------------------  분리선.. ... */}
           <Text style={baseSty.txtTitle}> Initial Scene </Text>
           <Button
-            
             icon={{ name: 'home', size: 32 }}
-            buttonStyle={{ backgroundColor: 'red', borderRadius: 20 }}
+            buttonStyle={{ backgroundColor: CL.navy, borderRadius: 20 }}
             textStyle={{ textAlign: 'center' }}
             title={'Welcome to\nReact Native Elements'}
+            onPress={() => console.log(' Pressed !! ')}
           />
         </ScrollView>
     );
