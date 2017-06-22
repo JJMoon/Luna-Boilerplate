@@ -12,6 +12,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Text, Image, LayoutAnimation,
   TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
+import { Button } from 'react-native-elements';
 import * as actions from '../rdx-actions';
 
 class UXdebugMain extends Component {
@@ -45,11 +46,18 @@ class UXdebugMain extends Component {
         <ScrollView style={sty.scrollView} >
           {/* -------------------------  -------------------------  분리선.. ... */}
           <Text style={baseSty.txtTitle}> Initial Scene </Text>
+          <Button
+            
+            icon={{ name: 'home', size: 32 }}
+            buttonStyle={{ backgroundColor: 'red', borderRadius: 20 }}
+            textStyle={{ textAlign: 'center' }}
+            title={'Welcome to\nReact Native Elements'}
+          />
         </ScrollView>
     );
   }
 }
-
+//
 const sty = StyleSheet.create({
   scrollView: {
     flex: 100,
