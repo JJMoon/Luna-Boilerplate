@@ -43,25 +43,44 @@ class UXdebugMain extends Component {
   render() {
     const { baseSty } = this.props.main;
 
+    const spacer = <View style={{ flex: 2, margin: 5 }} />;
+
     return (
         <ScrollView style={sty.scrollView} >
           {/* -------------------------  -------------------------  분리선.. ... */}
+          {spacer}
+          {spacer}
+
           <Text style={baseSty.txtTitle}> Initial Scene </Text>
+
+          {spacer}
+
           <Button
-            icon={{ name: 'home', size: 32 }}
-            buttonStyle={{ backgroundColor: CL.navy, borderRadius: 20 }}
+            large
+            buttonStyle={{ flex: 5, backgroundColor: CL.navy, borderRadius: 5 }}
             textStyle={{ textAlign: 'center' }}
-            title={'Welcome to\nReact Native Elements'}
+            title={'Go to sceneLogin'}
+            onPress={() => console.log(' Pressed !! ')}
+          />
+
+          {spacer}
+
+          <Button
+            icon={{ name: 'cached', size: 22 }}
+            buttonStyle={{ flex: 5, backgroundColor: CL.navy, borderRadius: 5 }}
+            textStyle={{ textAlign: 'center' }}
+            title={'Welcome '}
             onPress={() => console.log(' Pressed !! ')}
           />
         </ScrollView>
     );
   }
 }
-//
+// icon ::
 const sty = StyleSheet.create({
   scrollView: {
     flex: 100,
+    backgroundColor: '#DFF'
     //alignItems: 'stretch', justifyContent: 'center',
   },
 });
