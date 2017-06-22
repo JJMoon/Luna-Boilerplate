@@ -8,7 +8,6 @@
  */
 
 import React, { Component } from 'react';
-//import { View, Text, Button } from 'react-native';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { Router, Scene } from 'react-native-router-flux';
