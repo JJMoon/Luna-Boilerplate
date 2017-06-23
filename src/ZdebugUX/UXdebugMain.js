@@ -47,8 +47,10 @@ class UXdebugMain extends Component {
 
     const spacer = <View style={{ padding: 10, backgroundColor: '#BCF' }} />;
 
-    const opt = { backBttnArrow: true, ratio: scr.unit };
+    const opt = { backBttnArrow: true, ratio: scr.unit,
+      leftBttn: Actions.pop };
     const opt2 = { backBttnArrow: true, ratio: scr.unit,
+      leftBttn: () => console.log(' UXdebugMain :: opt2'),
       rightBttn: { text: '전체동의', txtSty: baseSty.txtBig,
       opt: { margin: 5, textAlign: 'left' } }
     };
