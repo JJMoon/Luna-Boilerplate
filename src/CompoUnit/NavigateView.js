@@ -10,9 +10,9 @@
 
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
+
 import * as CL from '../Compo/MnColor';
-import StatusBar from '../Compo/StatusBar';
-import MnButton from '../Compo/MnButton';
+import * as C from '../Compo';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 const arrImg = require('../ux/icons/arrow_back.png');
@@ -23,33 +23,30 @@ class NavigateView extends Component {
   getImgBack() {
     const { backBttnArrow = false, leftBttn = null } = this.props.opt;
     if (!backBttnArrow) return null;
-    const { ratio } = this.props.opt, xy = 16 * ratio; // 24 에서 16만 이미지.
-    const backSty = { flex: 0, width: xy, height: xy, margin: 24 };
 
     return (
       <TouchableOpacity
         onPress={leftBttn}
       >
-        <Image style={backSty} source={arrImg} />
+        <Image style={esty.imgBack} source={arrImg} />
         {/* <Icon name="Tick" height="20" width="20" /> */}
       </TouchableOpacity>
     );
   }
 
   renderHambWithPage() {
-    const { rightBttn, h = 56, ratio } = this.props.opt;
-    const viewSty = { flex: 0, height: (h * ratio), flexDirection: 'row' };
-    const { txtSty, text } = rightBttn;
-    const margin = 16 * ratio;
+    const { h = 56, rightBttn } = this.props.opt, height = (h * C.screenRatio);
+    const { text } = rightBttn;
+    const margin = 16 * C.screenRatio;
 
     return (
       <View style={{ flex: 0, backgroundColor: '#FFD' }}>
-        <StatusBar />
-        <View style={viewSty} >
+        <C.StatusBar />
+        <View style={[esty.contentContainer, { height }]}>
           {this.getImgBack()}
           <View style={{ flex: 100 }}>
-            <MnButton
-              txtSty={{ ...txtSty, textAlign: 'right' }}
+            <C.MnButton
+              txtSty={{ textAlign: 'right' }}
               text={text} margin={margin}
               onPressCallback={() => console.log('bttn click')}
             />
@@ -60,20 +57,21 @@ class NavigateView extends Component {
   }
 
   renderRightBttn() {
-    const { rightBttn, h = 56, ratio } = this.props.opt;
-    const viewSty = { flex: 0, height: (h * ratio), flexDirection: 'row' };
-    const { txtSty, text } = rightBttn;
-    const margin = 16 * ratio;
+    const { h = 56, rightBttn } = this.props.opt,
+      { text } = rightBttn,
+      height = (h * C.screenRatio);
+
+    console.log(` View height :  ${height} `);
 
     return (
       <View style={{ flex: 0, backgroundColor: '#FFD' }}>
-        <StatusBar />
-        <View style={viewSty} >
+        <C.StatusBar />
+        <View style={[esty.contentContainer, { height }]}>
           {this.getImgBack()}
           <View style={{ flex: 100 }}>
-            <MnButton
-              txtSty={{ ...txtSty, textAlign: 'right' }}
-              text={text} margin={margin}
+            <C.MnButton
+              txtSty={esty.rightBttnTxt}
+              text={text} margin={0}
               onPressCallback={() => console.log('bttn click')}
             />
           </View>
@@ -83,26 +81,14 @@ class NavigateView extends Component {
   }
 
   renderSimpleWithArrow() {
-    const { h = 56, ratio } = this.props.opt, xy = 16 * ratio; // 24 에서 16만 이미지.
-    const viewSty = { flex: 0, height: (h * ratio), flexDirection: 'row',
-      backgroundColor: '#FDF'
-    };
+    const { h = 56 } = this.props.opt, height = (h * C.screenRatio);
 
     return (
       <View style={{ flex: 0 }}>
-        <StatusBar />
-        <View style={viewSty} >
+        <C.StatusBar />
+        <View style={[esty.contentContainer, { height }]}>
 
           {this.getImgBack()}
-
-
-
-
-          <Text style={esty.txtx} >  Simple Text </Text>
-
-
-
-
 
         </View>
       </View>
@@ -131,14 +117,16 @@ class NavigateView extends Component {
 //const fsz = fntSz.ttl;
 
 const esty = EStyleSheet.create({
-  txtx: {
-    fontSize: '$fontSzBig'
+  imgBack: {
+    width: '16 * $scrRt', height: '16 * $scrRt',
+    flex: 0, margin: '20 * $scrRt'
   },
-
-  viewBase: {
-    flexDirection: 'row',
-    backgroundColor: '#DFF'
-    //alignItems: 'stretch', justifyContent: 'center',
+  rightBttnTxt: { // 20 16 20
+    fontSize: '$fontSzBig', padding: '20 * $scrRt',
+    color: '$navy', textAlign: 'right',
+  },
+  contentContainer: {
+    flex: 0, flexDirection: 'row', backgroundColor: '#FDF'
   },
 });
 

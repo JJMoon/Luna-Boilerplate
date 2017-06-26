@@ -20,22 +20,7 @@ export default (state = initState, action) => {
 
   switch (type) {
     case 'actInit':
-      const { width, height } = Dimensions.get('window');
-      // 16:9 기준. 폭의 1/360.
-      const ratio = (16 * (width / height)), unit = (ratio < 9 ? width / 9 : height / 16) / (360 / 9);
-      console.log(`\n rdxMainReducer >${type} Screen: ${width}x${height} r:${ratio} unit : ${unit}`);
-
-      // StyleSheet
-      const fontSz = { title: unit * 20, big: unit * 16, norm: unit * 14, sml: unit * 12 };
-      const txtBase = { flex: 1, textAlign: 'center', color: 'navy' };
-      //const baseSty = StyleSheet.create({
-      const baseSty = {
-        txtTitle: { ...txtBase, fontSize: fontSz.title, margin: 2 },
-        txtBig: { ...txtBase, fontSize: fontSz.big, margin: 2 },
-        txtNorm: { ...txtBase, fontSize: fontSz.norm, margin: 2 },
-        txtSml: { ...txtBase, fontSize: fontSz.sml },
-      };
-      return { ...state, scr: { width, height, unit }, baseSty };
+      return { ...state };
     default:
       return state;
   }

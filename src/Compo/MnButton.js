@@ -46,4 +46,4 @@ const sty = StyleSheet.create({
   }
 });
 
-export default MnButton;
+export { MnButton };

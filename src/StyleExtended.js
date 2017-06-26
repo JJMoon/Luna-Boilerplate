@@ -6,19 +6,18 @@ const ratio = (16 * (width / height)),
   screenRatio = (ratio < 9 ? width / 9 : height / 16) / (360 / 9);
 console.log(`\n   Screen: ${width}x${height} screenRatio : ${screenRatio}`);
 
-const fntSz = { ttl: 20, big: 16, norm: 14, sml: 12 };
-
 const baseTxt = { flex: 1, textAlign: 'center', color: 'navy' };
 
 EStyleSheet.build({
   // Screen Props
   $fullWid: width, $fullHgt: height, $halfWid: 0.5 * width,
   $scrRt: screenRatio,
-  $fontSzTitle: fntSz.ttl * '$scrRt', //big: unit * 16, norm: unit * 14, sml: unit * 12 };
-  $fontSzBig: fntSz.big * '$scrRt',
+  $fntTtl: 20, $fntBig: 16, $fntNrm: 14, $fntSml: 12,
+  $spc16: '26 * $scrRt', $spc14: '14 * $scrRt',
+  $fontSzTitle: '$fntTtl * $scrRt', $fontSzBig: '$fntBig * $scrRt',
+  $fontSzNorm: '$fntNrm * $scrRt', $fontSzSml: '$fntSml * $scrRt',
 
   // Styles
-  $txtBig: { ...baseTxt, fontSize: fntSz.big },
   $white: '#fff',
   $navy: '#292767',
   $bluey_gray: '#a0a7b8',

@@ -14,7 +14,7 @@ import { View, StyleSheet, Text, Image, LayoutAnimation,
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import * as actions from '../rdx-actions';
-import StatusBar from '../Compo/StatusBar';
+import * as C from '../Compo';
 //const mdl = new M.SettingModule();
 
 class SceneInitial extends Component {
@@ -51,7 +51,7 @@ class SceneInitial extends Component {
     return (
         <View style={sty.container} >
 
-          <StatusBar />
+          <C.StatusBar />
           {/* -------------------------  -------------------------  분리선.. ... */}
           <Text style={baseSty.txtTitle}>실제 받는 금액 비교 </Text>
           <Text style={baseSty.txtNorm}> baseSty.txtNorm </Text>

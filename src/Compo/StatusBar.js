@@ -27,4 +27,4 @@ class StatusBar extends Component {
   }
 }
 
-export default StatusBar;
+export { StatusBar };

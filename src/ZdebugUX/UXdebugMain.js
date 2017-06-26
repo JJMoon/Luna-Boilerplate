@@ -14,7 +14,7 @@ import { View, StyleSheet, Text, PixelRatio, LayoutAnimation,
 import { connect } from 'react-redux';
 import { Button } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
-//import EStyleSheet from 'react-native-extended-stylesheet';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 import { base } from '../Styles/Base';
 import * as actions from '../rdx-actions';
@@ -47,7 +47,7 @@ class UXdebugMain extends Component {
 
   ////////////////////////////////////////////////////   _//////////////////_   render
   render() {
-    const { baseSty, scr } = this.props.main;
+    const { scr } = this.props.main;
 
     const spacer = <View style={{ padding: 10, backgroundColor: '#BCF' }} />;
 
@@ -55,22 +55,22 @@ class UXdebugMain extends Component {
       leftBttn: Actions.pop };
     const opt2 = { backBttnArrow: true, ratio: scr.unit,
       leftBttn: () => console.log(' UXdebugMain :: opt2'),
-      rightBttn: { text: '전체동의', txtSty: baseSty.txtBig,
+      rightBttn: { text: '전체동의', txtSty: { fontSize: 12 },
       opt: { margin: 5, textAlign: 'left' } }
     };
 
     return (
-        <ScrollView style={st.scrollView} >
+        <ScrollView style={esty.scrll} >
           <NavigateView opt={opt}/>
 
           <NavigateView opt={opt2}/>
 
 
-          <Text style={baseSty.txtTitle}> Initial Scene X </Text>
+          <Text style={esty.titleSty}> Initial Scene X </Text>
 
           {spacer}
 
-          <View style={st.rowCont}>
+          <View style={esty.rowCont}>
             <View style={{ flex: 0, width: '30%', backgroundColor: 'rgb(100,0,13)' }} />
             <View style={{ flex: 0, width: '10%', backgroundColor: '#589' }} />
             <View style={{ flex: 0, width: '58%', backgroundColor: '#D45' }} />
@@ -107,17 +107,17 @@ class UXdebugMain extends Component {
     );
   }
 }
-// icon ::
-const st = StyleSheet.create({
-  scrollView: {
-    flex: 100,
-    //backgroundColor: '#DFF'
-    //alignItems: 'stretch', justifyContent: 'center',
+
+const esty = EStyleSheet.create({
+  scrll: { flex: 10 },
+  rowCont: { flex: 1, flexDirection: 'row' },
+  txtx: {
+    fontSize: '$fontSzBig'
   },
-  rowCont: {
-    flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
-    backgroundColor: '#EEA'
+  titleSty: {
+    fontSize: '$fontSzTitle', color: '$navy'
   },
+
 });
 
 const mapStateToProps = (state) => {
