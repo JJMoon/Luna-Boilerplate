@@ -11,8 +11,9 @@ import React, { Component } from 'react';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { Router, Scene } from 'react-native-router-flux';
-import reducers from './rdx-reducers';
+import StyleExtendedImportOnly from './StyleExtended';
 
+import reducers from './rdx-reducers';
 import SceneInitial from './Scenes/SceneInitial';
 import SceneEmailInput from './Scenes/SceneEmailInput';
 import UXdebugMain from './ZdebugUX/UXdebugMain';

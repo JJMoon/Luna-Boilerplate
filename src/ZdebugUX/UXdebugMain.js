@@ -14,6 +14,9 @@ import { View, StyleSheet, Text, Image, LayoutAnimation,
 import { connect } from 'react-redux';
 import { Button } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
+//import EStyleSheet from 'react-native-extended-stylesheet';
+
+import { styleSht, base } from '../Styles/Base';
 import * as actions from '../rdx-actions';
 import * as CL from '../Compo/MnColor';
 import NavigateView from '../Compo/NavigateView';
@@ -56,7 +59,7 @@ class UXdebugMain extends Component {
     };
 
     return (
-        <ScrollView style={sty.scrollView} >
+        <ScrollView style={st.scrollView} >
           <NavigateView opt={opt}/>
 
           <NavigateView opt={opt2}/>
@@ -65,6 +68,13 @@ class UXdebugMain extends Component {
           <Text style={baseSty.txtTitle}> Initial Scene X </Text>
 
           {spacer}
+
+          <View style={st.rowCont}>
+            <View style={{ flex: 0, width: '30%', backgroundColor: 'rgb(100,0,13)' }} />
+            <View style={{ flex: 0, width: '10%', backgroundColor: '#589' }} />
+            <View style={{ flex: 0, width: '58%', backgroundColor: '#D45' }} />
+
+          </View>
 
           <Button
             large
@@ -76,6 +86,14 @@ class UXdebugMain extends Component {
 
           {spacer}
 
+
+
+
+          <Text style={styleSht.txtx}>This is style TXTX </Text>
+          <Text style={base.txtx}>This is style TXTX </Text>
+
+          {spacer}
+
           <Button
             icon={{ name: 'cached', size: 22 }}
             buttonStyle={{ flex: 5, backgroundColor: CL.navy, borderRadius: 5 }}
@@ -83,16 +101,22 @@ class UXdebugMain extends Component {
             title={'Welcome '}
             onPress={() => console.log(' Pressed !! ')}
           />
+
+
         </ScrollView>
     );
   }
 }
 // icon ::
-const sty = StyleSheet.create({
+const st = StyleSheet.create({
   scrollView: {
     flex: 100,
     //backgroundColor: '#DFF'
     //alignItems: 'stretch', justifyContent: 'center',
+  },
+  rowCont: {
+    flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
+    backgroundColor: '#EEA'
   },
 });
 
