@@ -1,17 +1,8 @@
-import { StyleSheet } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-
-const styleSht = StyleSheet.create({
-
-  txtx: {
-    color: '#3EE',
-    textAlign: 'center',
-    fontSize: 20
-  },
-});
 
 const base = EStyleSheet.create({
   $fontColor: '$navy', $darkGray: '#222',
+  $outline: 1,
   $fontSize: 16,
   $btnHeight: 50,
   $labelFontSize: 12,
@@ -22,17 +13,14 @@ const base = EStyleSheet.create({
   $marginRight: 19,
   container: {
     flex: 1,
-    height: '100%',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    flexDirection: 'column',
+    justifyContent: 'center', alignItems: 'center',
   },
   rowCont: {
     flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
     backgroundColor: '#EEA'
   },
   separator: {
-    flex: 0, height: 2, padding: 2, margin: 1, backgroundColor: '#222'
+    flex: 0, height: 2, width: '$halfWid', padding: 2, margin: 1, backgroundColor: '#222'
   },
   txtx: {
     color: '#3EE',
@@ -46,4 +34,4 @@ const base = EStyleSheet.create({
 
 //export default styleSht;
 
-export { styleSht, base };
+export { base };

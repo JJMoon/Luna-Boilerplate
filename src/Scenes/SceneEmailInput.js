@@ -14,7 +14,7 @@ import { View, StyleSheet, Text, Image, LayoutAnimation,
   import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import * as actions from '../rdx-actions';
-import NavigateView from '../Compo/NavigateView';
+import NavigateView from '../CompoUnit/NavigateView';
 //const mdl = new M.SettingModule();
 
 class SceneEmailInput extends Component {

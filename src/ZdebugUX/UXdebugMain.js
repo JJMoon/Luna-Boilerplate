@@ -9,22 +9,23 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Image, LayoutAnimation,
+import { View, StyleSheet, Text, PixelRatio, LayoutAnimation,
   TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { Button } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 //import EStyleSheet from 'react-native-extended-stylesheet';
 
-import { styleSht, base } from '../Styles/Base';
+import { base } from '../Styles/Base';
 import * as actions from '../rdx-actions';
 import * as CL from '../Compo/MnColor';
-import NavigateView from '../Compo/NavigateView';
+import NavigateView from '../CompoUnit/NavigateView';
 
 class UXdebugMain extends Component {
   constructor(props) {
     super(props);
     console.log('\n\n\n\n\n ====== ====== ====== ======  [[ UXdebugMain  :: constructor ]]  .....\n');
+    console.log(`   PixelRatio :: ${PixelRatio.get()}`);
     this.state = {
     };
   }
@@ -34,11 +35,11 @@ class UXdebugMain extends Component {
   }
 
   componentWillMount() {
-    console.log('\n ====== ====== ====== ======  [[ SceneMain :: componentWillMount ]]');
+    console.log('\n ====== ====== ====== ======  [[ UXdebugMain :: componentWillMount ]]');
   }
 
   componentWillUnmount() {
-    console.log('\n\n\n\n\n ====== ====== ====== ======  [[ SceneMain :: unmount ]] ...\n');
+    console.log('\n\n\n\n\n ====== ====== ====== ======  [[ UXdebugMain :: unmount ]] ...\n');
   }
 
   componentDidMount() {
@@ -89,8 +90,7 @@ class UXdebugMain extends Component {
 
 
 
-          <Text style={styleSht.txtx}>This is style TXTX </Text>
-          <Text style={base.txtx}>This is style TXTX </Text>
+          <View style={base.separator} />
 
           {spacer}
 

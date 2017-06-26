@@ -11,9 +11,9 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import * as CL from '../Compo/MnColor';
-import StatusBar from './StatusBar';
-import MnButton from './MnButton';
-//import Icon from '../ux/Icon';
+import StatusBar from '../Compo/StatusBar';
+import MnButton from '../Compo/MnButton';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 const arrImg = require('../ux/icons/arrow_back.png');
 
@@ -92,7 +92,18 @@ class NavigateView extends Component {
       <View style={{ flex: 0 }}>
         <StatusBar />
         <View style={viewSty} >
+
           {this.getImgBack()}
+
+
+
+
+          <Text style={esty.txtx} >  Simple Text </Text>
+
+
+
+
+
         </View>
       </View>
     );
@@ -116,6 +127,20 @@ class NavigateView extends Component {
     );
   }
 }
+
+//const fsz = fntSz.ttl;
+
+const esty = EStyleSheet.create({
+  txtx: {
+    fontSize: '$fontSzBig'
+  },
+
+  viewBase: {
+    flexDirection: 'row',
+    backgroundColor: '#DFF'
+    //alignItems: 'stretch', justifyContent: 'center',
+  },
+});
 
 const sty = StyleSheet.create({
   viewBase: {
