@@ -9,4 +9,6 @@
 'use strict';
 
 // Usage : import * as CL from '../Compo/MnColor';
-export const navy = 'navy';
+const navy = 'navy';
+
+export { navy };

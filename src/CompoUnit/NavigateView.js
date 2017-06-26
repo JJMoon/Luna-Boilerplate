@@ -9,11 +9,10 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
-
-import * as CL from '../Compo/MnColor';
-import * as C from '../Compo';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
+
+import * as C from '../Compo';
 
 const arrImg = require('../ux/icons/arrow_back.png');
 
@@ -23,13 +22,11 @@ class NavigateView extends Component {
   getImgBack() {
     const { backBttnArrow = false, leftBttn = null } = this.props.opt;
     if (!backBttnArrow) return null;
-
     return (
       <TouchableOpacity
         onPress={leftBttn}
       >
         <Image style={esty.imgBack} source={arrImg} />
-        {/* <Icon name="Tick" height="20" width="20" /> */}
       </TouchableOpacity>
     );
   }
@@ -60,9 +57,6 @@ class NavigateView extends Component {
     const { h = 56, rightBttn } = this.props.opt,
       { text } = rightBttn,
       height = (h * C.screenRatio);
-
-    console.log(` View height :  ${height} `);
-
     return (
       <View style={{ flex: 0, backgroundColor: '#FFD' }}>
         <C.StatusBar />
@@ -81,7 +75,8 @@ class NavigateView extends Component {
   }
 
   renderSimpleWithArrow() {
-    const { h = 56 } = this.props.opt, height = (h * C.screenRatio);
+    const { h = 56 } = this.props.opt,
+      height = (h * C.screenRatio);
 
     return (
       <View style={{ flex: 0 }}>
@@ -97,26 +92,21 @@ class NavigateView extends Component {
 
   render() {
     const { backBttnArrow = false, hambuger = false,
-      leftBttn = null, rightBttn = null } = this.props.opt;
+      rightBttn = null } = this.props.opt;
 
     if (rightBttn) {
       if (hambuger) return this.renderHambWithPage(); // H=             page
       return this.renderRightBttn();                  // <-             bttn
     }
     if (backBttnArrow) return this.renderSimpleWithArrow();   // <-
-    return (
-      <View>
-        <Text>
-          This is the Second View !!!
-        </Text>
-      </View>
-    );
+    return null;
   }
 }
 
-//const fsz = fntSz.ttl;
-
 const esty = EStyleSheet.create({
+  contentContainer: {
+    flex: 0, flexDirection: 'row', backgroundColor: '#FDF'
+  },
   imgBack: {
     width: '16 * $scrRt', height: '16 * $scrRt',
     flex: 0, margin: '20 * $scrRt'
@@ -125,18 +115,6 @@ const esty = EStyleSheet.create({
     fontSize: '$fontSzBig', padding: '20 * $scrRt',
     color: '$navy', textAlign: 'right',
   },
-  contentContainer: {
-    flex: 0, flexDirection: 'row', backgroundColor: '#FDF'
-  },
 });
-
-const sty = StyleSheet.create({
-  viewBase: {
-    flexDirection: 'row',
-    backgroundColor: '#DFF'
-    //alignItems: 'stretch', justifyContent: 'center',
-  },
-});
-
 
 export default NavigateView;
