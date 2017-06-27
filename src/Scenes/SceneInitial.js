@@ -13,6 +13,7 @@ import { View, StyleSheet, Text, Image, LayoutAnimation,
   TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
+import { SideMenu } from 'react-native-elements';
 import * as actions from '../rdx-actions';
 import * as C from '../Compo';
 //const mdl = new M.SettingModule();
@@ -23,7 +24,9 @@ class SceneInitial extends Component {
     console.log('\n\n\n\n\n ====== ====== ====== ======  [[ SceneMain :: constructor ]] 앱 시작.....\n');
     this.props.actInit();
     this.state = {
+      isOpen: false
     };
+    this.toggleSideMenu = this.toggleSideMenu.bind(this)
   }
 
   ////////////////////////////////////////////////////   _//////////////////_   component life cycle
@@ -40,7 +43,18 @@ class SceneInitial extends Component {
   }
 
   componentDidMount() {
-    Actions.debugMainUX();
+    //Actions.debugMainUX();
+    this.setState({ isOpen: false });
+  }
+
+  toggleSideMenu() {
+    console.log(` >>>>>> toggleSideMenu() :: ${this.state.isOpen}`);
+    this.setState({ isOpen: !this.state.isOpen });
+  }
+
+  onSideMenuChange(isOpen: boolean) {
+    console.log(` >>>>>> onSideMenuChange() :: Force to >>> ${isOpen}`);
+    this.setState({ isOpen });
   }
 
   ////////////////////////////////////////////////////   _//////////////////_   render
@@ -48,28 +62,49 @@ class SceneInitial extends Component {
     console.log('\n ====== ====== ====== ======  [[ SceneMain :: render ]]');
     const { baseSty } = this.props.main;
     console.log('render');
-    return (
-        <View style={sty.container} >
 
-          <C.StatusBar />
-          {/* -------------------------  -------------------------  분리선.. ... */}
-          <Text style={baseSty.txtTitle}>실제 받는 금액 비교 </Text>
-          <Text style={baseSty.txtNorm}> baseSty.txtNorm </Text>
-          <Text style={baseSty.txtSml}> 폰트 Size : 12 글자임... </Text>
-          <Text style={baseSty.txtNorm}> Norm  text ::  fontSize : 14 </Text>
-          <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
-          <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
-          <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
+    const MenuComponent = (
+        <View style={{ flex: 1, backgroundColor: '#EAE', paddingTop: 50 }} >
+          <Text> Side Menu Text </Text>
         </View>
+      );
+
+    return (
+      <SideMenu
+        isOpen={this.state.isOpen}
+        menuPosition={'left'}
+        onChange={this.onSideMenuChange.bind(this)}
+        menu={MenuComponent}
+      >
+        {this.renderMain()}
+      </SideMenu>
     );
   }
 
-  toggle() {
-    //console.log('toggle');
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
+  renderMain() {
+    const { baseSty } = this.props.main;
+    return (
+      <View style={sty.container} >
+
+        <C.StatusBar />
+        {/* -------------------------  -------------------------  분리선.. ... */}
+        <Text style={baseSty.txtTitle}>실제 받는 금액 비교 </Text>
+        <Text style={baseSty.txtNorm}> baseSty.txtNorm </Text>
+        <Text style={baseSty.txtSml}> 폰트 Size : 12 글자임... </Text>
+        <Text style={baseSty.txtNorm}> Norm  text ::  fontSize : 14 </Text>
+        <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
+        <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
+        <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
+      </View>
+    );
   }
+
+  // toggle() {
+  //   //console.log('toggle');
+  //   this.setState({
+  //     isOpen: !this.state.isOpen,
+  //   });
+  // }
 
   updateMenuState(isOpen) {
     //console.log(`updateMenuState   >> isOpen ${isOpen}`);
@@ -81,7 +116,7 @@ const sty = StyleSheet.create({
   container: {
     flex: 100, alignItems: 'stretch',
     justifyContent: 'center',
-    backgroundColor: '#FFF0'
+    backgroundColor: '#FFF'
   },
   backgroundImage: {
     alignItems: 'stretch', justifyContent: 'center', margin: 0, marginTop: 0,
