@@ -22,14 +22,14 @@ class App extends Component {
   render() {
     return (
       <Provider store={createStore(reducers)}>
-      <Router>
-        <Scene key="root">
-          <Scene key="sceneInitial" component={SceneInitial} title="Initial" initial hideNavBar />
-          <Scene key="debugMainUX" component={UXdebugMain} title="Ux Test" hideNavBar />
-          <Scene key="authEmailInput" component={SceneEmailInput} title="Email Input" hideNavBar />
-        </Scene>
-      </Router>
-    </Provider>
+        <Router>
+          <Scene key="root">
+            <Scene key="sceneInitial" component={SceneInitial} title="Initial" initial hideNavBar />
+            <Scene key="debugMainUX" component={UXdebugMain} title="Ux Test" hideNavBar />
+            <Scene key="authEmailInput" component={SceneEmailInput} title="Email Input" hideNavBar />
+          </Scene>
+        </Router>
+      </Provider>
     );
   }
 }

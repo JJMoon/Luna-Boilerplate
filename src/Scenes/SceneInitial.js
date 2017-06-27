@@ -13,9 +13,12 @@ import { View, StyleSheet, Text, Image, LayoutAnimation,
   TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
+import { SideMenu } from 'react-native-elements';
+import EStyleSheet from 'react-native-extended-stylesheet';
 import * as actions from '../rdx-actions';
 import * as C from '../Compo';
-//const mdl = new M.SettingModule();
+import SideMenuMain from './SideMenu';
+
 
 class SceneInitial extends Component {
   constructor(props) {
@@ -23,7 +26,9 @@ class SceneInitial extends Component {
     console.log('\n\n\n\n\n ====== ====== ====== ======  [[ SceneMain :: constructor ]] 앱 시작.....\n');
     this.props.actInit();
     this.state = {
+      isOpen: false
     };
+    this.toggleSideMenu = this.toggleSideMenu.bind(this)
   }
 
   ////////////////////////////////////////////////////   _//////////////////_   component life cycle
@@ -40,7 +45,18 @@ class SceneInitial extends Component {
   }
 
   componentDidMount() {
-    Actions.debugMainUX();
+    //Actions.debugMainUX();
+    this.setState({ isOpen: false });
+  }
+
+  toggleSideMenu() {
+    console.log(` >>>>>> toggleSideMenu() :: ${this.state.isOpen}`);
+    this.setState({ isOpen: !this.state.isOpen });
+  }
+
+  onSideMenuChange(isOpen: boolean) {
+    console.log(` >>>>>> onSideMenuChange() :: Force to >>> ${isOpen}`);
+    this.setState({ isOpen });
   }
 
   ////////////////////////////////////////////////////   _//////////////////_   render
@@ -48,28 +64,46 @@ class SceneInitial extends Component {
     console.log('\n ====== ====== ====== ======  [[ SceneMain :: render ]]');
     const { baseSty } = this.props.main;
     console.log('render');
-    return (
-        <View style={sty.container} >
 
-          <C.StatusBar />
-          {/* -------------------------  -------------------------  분리선.. ... */}
-          <Text style={baseSty.txtTitle}>실제 받는 금액 비교 </Text>
-          <Text style={baseSty.txtNorm}> baseSty.txtNorm </Text>
-          <Text style={baseSty.txtSml}> 폰트 Size : 12 글자임... </Text>
-          <Text style={baseSty.txtNorm}> Norm  text ::  fontSize : 14 </Text>
-          <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
-          <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
-          <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
-        </View>
+    return (
+      <SideMenu
+        openMenuOffset={304 * C.screenRatio}
+        isOpen={this.state.isOpen}
+        menuPosition={'left'}
+        onChange={this.onSideMenuChange.bind(this)}
+        menu={<SideMenuMain />}
+      >
+        {this.renderMain()}
+      </SideMenu>
     );
   }
 
-  toggle() {
-    //console.log('toggle');
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
+  renderMain() {
+    return (
+      <View style={esty.mainContainer} >
+        <View style={{ flex: 3 }} />
+        {/* -------------------------  -------------------------  분리선.. ... */}
+        <C.MnButton
+          text={'MENU'}
+          onPressCallback={this.toggleSideMenu.bind(this)}
+        />
+        <C.MnButton
+          text={'>> UI TEST Scene'}
+          onPressCallback={Actions.debugMainUX}
+        />
+
+        <Text style={esty.nameText}>실제 받는 금액 비교 </Text>
+
+      </View>
+    );
   }
+
+  // toggle() {
+  //   //console.log('toggle');
+  //   this.setState({
+  //     isOpen: !this.state.isOpen,
+  //   });
+  // }
 
   updateMenuState(isOpen) {
     //console.log(`updateMenuState   >> isOpen ${isOpen}`);
@@ -77,24 +111,19 @@ class SceneInitial extends Component {
   }
 }
 
-const sty = StyleSheet.create({
-  container: {
-    flex: 100, alignItems: 'stretch',
-    justifyContent: 'center',
-    backgroundColor: '#FFF0'
+const esty = EStyleSheet.create({
+  mainContainer: {
+    flex: 100, width: '100%', backgroundColor: '#FFF'
   },
-  backgroundImage: {
-    alignItems: 'stretch', justifyContent: 'center', margin: 0, marginTop: 0,
-    flex: 1, alignSelf: 'stretch', width: null, height: null,
-    resizeMode: 'stretch', // or 'stretch'
+  topContainer: {
+    flex: 0, height: '172 * $scrRt',
+    backgroundColor: '$pale_gray'
   },
-  bottom3button: {
-    flex: 5, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center',
-    marginHorizontal: 20
+  nameText: {
+    flex: 10, fontSize: '$fontSzTitle', padding: '10 * $scrRt',
+    color: '$navy', textAlign: 'center',
   },
-  rowContainer: { flexDirection: 'row', alignSelf: 'stretch' },
-  seperateLine: { height: 2, backgroundColor: '#AAAAAA' },
-  bttnView: { flex: 3, alignItems: 'center' },
+
 });
 
 const mapStateToProps = (state) => {
