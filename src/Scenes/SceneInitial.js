@@ -79,14 +79,17 @@ class SceneInitial extends Component {
   }
 
   renderMain() {
-    // onPressCallback, txtSty, text, margin
     return (
       <View style={esty.mainContainer} >
-        <C.StatusBar />
+        <View style={{ flex: 3 }} />
         {/* -------------------------  -------------------------  분리선.. ... */}
         <C.MnButton
           text={'MENU'}
           onPressCallback={this.toggleSideMenu.bind(this)}
+        />
+        <C.MnButton
+          text={'>> UI TEST Scene'}
+          onPressCallback={Actions.debugMainUX}
         />
 
         <Text style={esty.nameText}>실제 받는 금액 비교 </Text>
@@ -117,7 +120,7 @@ const esty = EStyleSheet.create({
     backgroundColor: '$pale_gray'
   },
   nameText: {
-    flex: 1, fontSize: '$fontSzTitle', padding: '10 * $scrRt',
+    flex: 10, fontSize: '$fontSzTitle', padding: '10 * $scrRt',
     color: '$navy', textAlign: 'center',
   },
 

@@ -13,21 +13,22 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 /*
 사용 example =========================================================================================
-<HtButton width={100} fWidth={1} ptext={'Other'}
-  onPressCallback={this._bttnActOtherView.bind(this)}>
-사용 example =========================================================================================
+import * as C from '../Compo';
+<C.MnButton
+  txtSty={{ textAlign: 'right' }}
+  text={text} margin={margin}
+  onPressCallback={() => console.log('bttn click')}
+/>
+=========================================================================================
 */
-//const styl = require('./HtStyles');
-///-------------------------  UI Components  -------------------------  버튼..
-class MnButton extends Component {
-   //  {/* View -------------------------  버튼 Location  ------------------------- View */}
-  render() {
-    const { onPressCallback, txtSty, text, margin } = this.props;
 
-    // margin, textAlign
+class MnButton extends Component {
+  render() {
+    const { txtSty, btnSty, text, margin = 0, onPressCallback } = this.props;
+
     return (
       <TouchableOpacity
-        style={[sty.bttnSty, { margin }]}
+        style={[sty.bttnSty, btnSty, { margin }]}
         onPress={onPressCallback}
       >
         <Text style={[sty.txtSty, txtSty]}>{text}</Text>
