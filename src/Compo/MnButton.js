@@ -27,7 +27,7 @@ class MnButton extends Component {
     // margin, textAlign
     return (
       <TouchableOpacity
-        style={[sty.bttnSty, { margin } ]}
+        style={[sty.bttnSty, { margin }]}
         onPress={onPressCallback}
       >
         <Text style={[sty.txtSty, txtSty]}>{text}</Text>

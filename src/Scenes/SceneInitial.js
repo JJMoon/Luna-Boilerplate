@@ -14,9 +14,11 @@ import { View, StyleSheet, Text, Image, LayoutAnimation,
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { SideMenu } from 'react-native-elements';
+import EStyleSheet from 'react-native-extended-stylesheet';
 import * as actions from '../rdx-actions';
 import * as C from '../Compo';
-//const mdl = new M.SettingModule();
+import SideMenuMain from './SideMenu';
+
 
 class SceneInitial extends Component {
   constructor(props) {
@@ -63,18 +65,13 @@ class SceneInitial extends Component {
     const { baseSty } = this.props.main;
     console.log('render');
 
-    const MenuComponent = (
-        <View style={{ flex: 1, backgroundColor: '#EAE', paddingTop: 50 }} >
-          <Text> Side Menu Text </Text>
-        </View>
-      );
-
     return (
       <SideMenu
+        openMenuOffset={304 * C.screenRatio}
         isOpen={this.state.isOpen}
         menuPosition={'left'}
         onChange={this.onSideMenuChange.bind(this)}
-        menu={MenuComponent}
+        menu={<SideMenuMain />}
       >
         {this.renderMain()}
       </SideMenu>
@@ -82,19 +79,18 @@ class SceneInitial extends Component {
   }
 
   renderMain() {
-    const { baseSty } = this.props.main;
+    // onPressCallback, txtSty, text, margin
     return (
-      <View style={sty.container} >
-
+      <View style={esty.mainContainer} >
         <C.StatusBar />
         {/* -------------------------  -------------------------  분리선.. ... */}
-        <Text style={baseSty.txtTitle}>실제 받는 금액 비교 </Text>
-        <Text style={baseSty.txtNorm}> baseSty.txtNorm </Text>
-        <Text style={baseSty.txtSml}> 폰트 Size : 12 글자임... </Text>
-        <Text style={baseSty.txtNorm}> Norm  text ::  fontSize : 14 </Text>
-        <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
-        <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
-        <Text style={baseSty.txtSml}> baseSty.txtSml </Text>
+        <C.MnButton
+          text={'MENU'}
+          onPressCallback={this.toggleSideMenu.bind(this)}
+        />
+
+        <Text style={esty.nameText}>실제 받는 금액 비교 </Text>
+
       </View>
     );
   }
@@ -112,24 +108,19 @@ class SceneInitial extends Component {
   }
 }
 
-const sty = StyleSheet.create({
-  container: {
-    flex: 100, alignItems: 'stretch',
-    justifyContent: 'center',
-    backgroundColor: '#FFF'
+const esty = EStyleSheet.create({
+  mainContainer: {
+    flex: 100, width: '100%', backgroundColor: '#FFF'
   },
-  backgroundImage: {
-    alignItems: 'stretch', justifyContent: 'center', margin: 0, marginTop: 0,
-    flex: 1, alignSelf: 'stretch', width: null, height: null,
-    resizeMode: 'stretch', // or 'stretch'
+  topContainer: {
+    flex: 0, height: '172 * $scrRt',
+    backgroundColor: '$pale_gray'
   },
-  bottom3button: {
-    flex: 5, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center',
-    marginHorizontal: 20
+  nameText: {
+    flex: 1, fontSize: '$fontSzTitle', padding: '10 * $scrRt',
+    color: '$navy', textAlign: 'center',
   },
-  rowContainer: { flexDirection: 'row', alignSelf: 'stretch' },
-  seperateLine: { height: 2, backgroundColor: '#AAAAAA' },
-  bttnView: { flex: 3, alignItems: 'center' },
+
 });
 
 const mapStateToProps = (state) => {
