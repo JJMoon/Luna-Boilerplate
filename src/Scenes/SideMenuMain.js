@@ -17,44 +17,6 @@ import * as C from '../Compo';
 const avatar = require('../ux/icons/img_profile.png');
 
 class SideMenuMain extends Component {
-
-  renderRightBttn() {
-    const { h = 56, rightBttn } = this.props.opt,
-      { text } = rightBttn,
-      height = (h * C.screenRatio);
-    return (
-      <View style={{ flex: 0, backgroundColor: '#FFD' }}>
-        <C.StatusBar />
-        <View style={[esty.contentContainer, { height }]}>
-          {this.getImgBack()}
-          <View style={{ flex: 100 }}>
-            <C.MnButton
-              txtSty={esty.rightBttnTxt}
-              text={text} margin={0}
-              onPressCallback={() => console.log('bttn click')}
-            />
-          </View>
-        </View>
-      </View>
-    );
-  }
-
-  renderSimpleWithArrow() {
-    const { h = 56 } = this.props.opt,
-      height = (h * C.screenRatio);
-
-    return (
-      <View style={{ flex: 0 }}>
-        <C.StatusBar />
-        <View style={[esty.contentContainer, { height }]}>
-
-          {this.getImgBack()}
-
-        </View>
-      </View>
-    );
-  }
-
   render() {
     return (
       <View style={esty.mainContainer} >
@@ -77,7 +39,7 @@ class SideMenuMain extends Component {
 
 const esty = EStyleSheet.create({
   mainContainer: {
-    flex: 100, width: '100%', backgroundColor: '#FFF'
+    flex: 100, width: '100%', backgroundColor: '#FFB'
   },
   topContainer: {
     flex: 0, height: '172 * $scrRt',

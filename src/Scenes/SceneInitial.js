@@ -13,12 +13,11 @@ import { View, StyleSheet, Text, Image, LayoutAnimation,
   TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
+import * as actions from '../rdx-actions';
 import { SideMenu } from 'react-native-elements';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import * as actions from '../rdx-actions';
 import * as C from '../Compo';
-import SideMenuMain from './SideMenu';
-
+import SideMenuMain from './SideMenuMain';
 
 class SceneInitial extends Component {
   constructor(props) {
@@ -28,7 +27,8 @@ class SceneInitial extends Component {
     this.state = {
       isOpen: false
     };
-    this.toggleSideMenu = this.toggleSideMenu.bind(this)
+    //this.toggleSideMenu = this.toggleSideMenu.bind(this)
+    //this.props.actSetSideMenu(this.toggleSideMenu);
   }
 
   ////////////////////////////////////////////////////   _//////////////////_   component life cycle
@@ -45,47 +45,20 @@ class SceneInitial extends Component {
   }
 
   componentDidMount() {
-    //Actions.debugMainUX();
     this.setState({ isOpen: false });
   }
 
-  toggleSideMenu() {
-    console.log(` >>>>>> toggleSideMenu() :: ${this.state.isOpen}`);
-    this.setState({ isOpen: !this.state.isOpen });
-  }
-
-  onSideMenuChange(isOpen: boolean) {
-    console.log(` >>>>>> onSideMenuChange() :: Force to >>> ${isOpen}`);
-    this.setState({ isOpen });
-  }
-
-  ////////////////////////////////////////////////////   _//////////////////_   render
-  render() {
-    console.log('\n ====== ====== ====== ======  [[ SceneMain :: render ]]');
-    const { baseSty } = this.props.main;
-    console.log('render');
-
-    return (
-      <SideMenu
-        openMenuOffset={304 * C.screenRatio}
-        isOpen={this.state.isOpen}
-        menuPosition={'left'}
-        onChange={this.onSideMenuChange.bind(this)}
-        menu={<SideMenuMain />}
-      >
-        {this.renderMain()}
-      </SideMenu>
-    );
-  }
 
   renderMain() {
+    // onPressCallback={this.toggleSideMenu.bind(this)}
+
     return (
       <View style={esty.mainContainer} >
         <View style={{ flex: 3 }} />
         {/* -------------------------  -------------------------  분리선.. ... */}
         <C.MnButton
           text={'MENU'}
-          onPressCallback={this.toggleSideMenu.bind(this)}
+          onPressCallback={this.props.toggleSideMenu}
         />
         <C.MnButton
           text={'>> UI TEST Scene'}
@@ -97,6 +70,23 @@ class SceneInitial extends Component {
       </View>
     );
   }
+
+  render() {
+    const { isSideMenuOpen } = this.props.main;
+    return (
+      <SideMenu
+        openMenuOffset={304 * C.screenRatio}
+        menuPosition={'left'}
+        isOpen={isSideMenuOpen}
+        onChange={this.props.changeSideMenu}
+        menu={<SideMenuMain />}
+      >
+        {this.renderMain()}
+      </SideMenu>
+    );
+  }
+
+
 
   // toggle() {
   //   //console.log('toggle');
@@ -113,7 +103,7 @@ class SceneInitial extends Component {
 
 const esty = EStyleSheet.create({
   mainContainer: {
-    flex: 100, width: '100%', backgroundColor: '#FFF'
+    flex: 100, width: '100%', backgroundColor: '#FAF'
   },
   topContainer: {
     flex: 0, height: '172 * $scrRt',

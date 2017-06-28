@@ -10,17 +10,30 @@
 import { Dimensions, StyleSheet } from 'react-native';
 
 const initState = {
-  loggedIn: false,
+  loggedIn: true,
+  isSideMenuOpen: false, sceneSetup: false,
   scr: { width: 10, height: 10, unit: 5 },
   baseSty: { txtTitle: null, txtNorm: null }
 };
 
 export default (state = initState, action) => {
   const { type, payload } = action;
+  const { isSideMenuOpen } = state;
+
+  console.log(`  reducer :: ${type}`);
 
   switch (type) {
     case 'actInit':
       return { ...state };
+    case 'setScenes':
+      return { ...state, sceneSetup: true };
+    case 'actSetSideMenu':
+      return { ...state, sideMenu: payload };
+    case 'toggleSideMenu':
+      console.log(`    toggleSideMenu ${isSideMenuOpen}`);
+      return { ...state, isSideMenuOpen: !isSideMenuOpen };
+    case 'changeSideMenu':
+      return { ...state, isSideMenuOpen: payload };
     default:
       return state;
   }

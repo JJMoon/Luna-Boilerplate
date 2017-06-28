@@ -12,14 +12,17 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Text, PixelRatio, LayoutAnimation,
   TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import { Button } from 'react-native-elements';
+import { Button, SideMenu } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import { base } from '../Styles/Base';
 import * as actions from '../rdx-actions';
+import * as C from '../Compo';
 import * as CL from '../Compo/MnColor';
 import NavigateView from '../CompoUnit/NavigateView';
+import SideMenuMain from '../Scenes/SideMenuMain';
+
 
 class UXdebugMain extends Component {
   constructor(props) {
@@ -28,6 +31,7 @@ class UXdebugMain extends Component {
     console.log(`   PixelRatio :: ${PixelRatio.get()}`);
     this.state = {
     };
+
   }
 
   ////////////////////////////////////////////////////   _//////////////////_   component life cycle
@@ -47,6 +51,22 @@ class UXdebugMain extends Component {
 
   ////////////////////////////////////////////////////   _//////////////////_   render
   render() {
+    const { isSideMenuOpen } = this.props.main;
+    return (
+      <SideMenu
+        openMenuOffset={304 * C.screenRatio}
+        menuPosition={'left'}
+        isOpen={isSideMenuOpen}
+        onChange={this.props.changeSideMenu}
+        menu={<SideMenuMain />}
+      >
+        {this.renderMain()}
+      </SideMenu>
+    );
+  }
+
+
+  renderMain() {
     const { scr } = this.props.main;
 
     const spacer = <View style={{ padding: 10, backgroundColor: '#BCF' }} />;
@@ -58,6 +78,8 @@ class UXdebugMain extends Component {
       rightBttn: { text: '전체동의', txtSty: { fontSize: 12 },
       opt: { margin: 5, textAlign: 'left' } }
     };
+
+
 
     return (
         <ScrollView style={esty.scrll} >
@@ -102,6 +124,11 @@ class UXdebugMain extends Component {
             onPress={() => console.log(' Pressed !! ')}
           />
 
+          <C.MnButton
+            text={'MENU'}
+            onPressCallback={this.props.toggleSideMenu}
+          />
+
 
         </ScrollView>
     );
@@ -109,7 +136,7 @@ class UXdebugMain extends Component {
 }
 
 const esty = EStyleSheet.create({
-  scrll: { flex: 10 },
+  scrll: { flex: 10, backgroundColor: '#FDA' },
   rowCont: { flex: 1, flexDirection: 'row' },
   txtx: {
     fontSize: '$fontSzBig'
