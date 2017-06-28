@@ -51,20 +51,8 @@ class UXdebugMain extends Component {
 
   ////////////////////////////////////////////////////   _//////////////////_   render
   render() {
-    const { isSideMenuOpen } = this.props.main;
-    return (
-      <SideMenu
-        openMenuOffset={304 * C.screenRatio}
-        menuPosition={'left'}
-        isOpen={isSideMenuOpen}
-        onChange={this.props.changeSideMenu}
-        menu={<SideMenuMain />}
-      >
-        {this.renderMain()}
-      </SideMenu>
-    );
+    return (<CU.MnSideMenu main={this.renderMain()} />);
   }
-
 
   renderMain() {
     const { scr } = this.props.main;
@@ -78,9 +66,6 @@ class UXdebugMain extends Component {
       rightBttn: { text: '전체동의', txtSty: { fontSize: 12 },
       opt: { margin: 5, textAlign: 'left' } }
     };
-
-
-
     return (
         <ScrollView style={esty.scrll} >
           <CU.NavigateView opt={opt}/>
@@ -125,8 +110,6 @@ class UXdebugMain extends Component {
             text={'MENU'}
             onPressCallback={this.props.toggleSideMenu}
           />
-
-
         </ScrollView>
     );
   }
