@@ -13,8 +13,6 @@ export * from './rdxBaseAction';
 export const actSetSideMenu =
 (payload) => { return { type: 'actSetSideMenu', payload }; };
 
-export const setScenes = () => { return { type: 'setScenes' }; };
-
 export const toggleSideMenu = () => { return { type: 'toggleSideMenu' }; };
 export const changeSideMenu = (payload) => {
   return { type: 'changeSideMenu', payload };

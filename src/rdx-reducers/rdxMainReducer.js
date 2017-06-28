@@ -11,7 +11,7 @@ import { Dimensions, StyleSheet } from 'react-native';
 
 const initState = {
   loggedIn: true,
-  isSideMenuOpen: false, sceneSetup: false,
+  isSideMenuOpen: false,
   scr: { width: 10, height: 10, unit: 5 },
   baseSty: { txtTitle: null, txtNorm: null }
 };
@@ -25,8 +25,6 @@ export default (state = initState, action) => {
   switch (type) {
     case 'actInit':
       return { ...state };
-    case 'setScenes':
-      return { ...state, sceneSetup: true };
     case 'actSetSideMenu':
       return { ...state, sideMenu: payload };
     case 'toggleSideMenu':
