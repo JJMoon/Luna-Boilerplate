@@ -117,4 +117,4 @@ const esty = EStyleSheet.create({
   },
 });
 
-export default NavigateView;
+export { NavigateView };

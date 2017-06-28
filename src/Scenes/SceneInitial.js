@@ -13,22 +13,17 @@ import { View, StyleSheet, Text, Image, LayoutAnimation,
   TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
-import * as actions from '../rdx-actions';
-import { SideMenu } from 'react-native-elements';
 import EStyleSheet from 'react-native-extended-stylesheet';
+
+import * as actions from '../rdx-actions';
 import * as C from '../Compo';
-import SideMenuMain from './SideMenuMain';
+import * as CU from '../CompoUnit';
 
 class SceneInitial extends Component {
   constructor(props) {
     super(props);
     console.log('\n\n\n\n\n ====== ====== ====== ======  [[ SceneMain :: constructor ]] 앱 시작.....\n');
     this.props.actInit();
-    this.state = {
-      isOpen: false
-    };
-    //this.toggleSideMenu = this.toggleSideMenu.bind(this)
-    //this.props.actSetSideMenu(this.toggleSideMenu);
   }
 
   ////////////////////////////////////////////////////   _//////////////////_   component life cycle
@@ -72,32 +67,7 @@ class SceneInitial extends Component {
   }
 
   render() {
-    const { isSideMenuOpen } = this.props.main;
-    return (
-      <SideMenu
-        openMenuOffset={304 * C.screenRatio}
-        menuPosition={'left'}
-        isOpen={isSideMenuOpen}
-        onChange={this.props.changeSideMenu}
-        menu={<SideMenuMain />}
-      >
-        {this.renderMain()}
-      </SideMenu>
-    );
-  }
-
-
-
-  // toggle() {
-  //   //console.log('toggle');
-  //   this.setState({
-  //     isOpen: !this.state.isOpen,
-  //   });
-  // }
-
-  updateMenuState(isOpen) {
-    //console.log(`updateMenuState   >> isOpen ${isOpen}`);
-    this.setState({ isOpen, });
+    return (<CU.MnSideMenu main={this.renderMain()} />);
   }
 }
 

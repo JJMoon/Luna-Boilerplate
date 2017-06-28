@@ -20,7 +20,7 @@ import { base } from '../Styles/Base';
 import * as actions from '../rdx-actions';
 import * as C from '../Compo';
 import * as CL from '../Compo/MnColor';
-import NavigateView from '../CompoUnit/NavigateView';
+import * as CU from '../CompoUnit';
 import SideMenuMain from '../Scenes/SideMenuMain';
 
 
@@ -83,9 +83,9 @@ class UXdebugMain extends Component {
 
     return (
         <ScrollView style={esty.scrll} >
-          <NavigateView opt={opt}/>
+          <CU.NavigateView opt={opt}/>
 
-          <NavigateView opt={opt2}/>
+          <CU.NavigateView opt={opt2}/>
 
 
           <Text style={esty.titleSty}> Initial Scene X </Text>
@@ -108,9 +108,6 @@ class UXdebugMain extends Component {
           />
 
           {spacer}
-
-
-
 
           <View style={base.separator} />
 

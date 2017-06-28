@@ -11,18 +11,14 @@ import React, { Component } from 'react';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { Router, Scene } from 'react-native-router-flux';
-import { SideMenu } from 'react-native-elements';
 
-import StyleExtendedImportOnly from './StyleExtended';
+import StyleExtendedImportOnly from './StyleExtended'; // EStyleSheet.build.
 import reducers from './rdx-reducers';
 import SceneInitial from './Scenes/SceneInitial';
 import SceneEmailInput from './Scenes/SceneEmailInput';
 import UXdebugMain from './ZdebugUX/UXdebugMain';
 
-import AppContent from './AppContent';
-
 class App extends Component {
-
   render() {
     return (
       <Provider store={createStore(reducers)}>
@@ -36,20 +32,6 @@ class App extends Component {
       </Provider>
     );
   }
-  //
-  // renderMain() {
-  //   return (
-  //
-  //       <Router>
-  //         <Scene key="root">
-  //           <Scene key="sceneInitial" component={SceneInitial} title="Initial" initial hideNavBar />
-  //           <Scene key="debugMainUX" component={UXdebugMain} title="Ux Test" hideNavBar />
-  //           <Scene key="authEmailInput" component={SceneEmailInput} title="Email Input" hideNavBar />
-  //         </Scene>
-  //       </Router>
-  //
-  //   );
-  // }
 }
 
 export default App;

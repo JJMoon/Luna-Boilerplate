@@ -9,8 +9,9 @@
 
 import { combineReducers } from 'redux';
 import mainReducer from './rdxMainReducer';
+import sideMenuReducer from './rdxSideMenu';
 
 export default combineReducers({
-  main: mainReducer
-
+  main: mainReducer,
+  sideMenu: sideMenuReducer
 });
