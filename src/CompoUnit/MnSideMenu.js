@@ -23,7 +23,7 @@ class MnSideMenu extends Component {
     const { isSideMenuOpen } = this.props.sideMenu;
     return (
       <SideMenu
-        openMenuOffset={304 * C.screenRatio}
+        openMenuOffset={C.width * 0.9}
         menuPosition={'left'}
         isOpen={isSideMenuOpen}
         onChange={this.props.changeSideMenu}
