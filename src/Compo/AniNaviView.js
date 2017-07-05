@@ -8,7 +8,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import * as C from '../Compo';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const SWIPE_DURATION = 2000; //250;
+const SWIPE_DURATION = 250;
 
 class AniNaviView extends Component {
   constructor(props) {
