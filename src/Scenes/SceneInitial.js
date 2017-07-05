@@ -18,7 +18,6 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import * as actions from '../rdx-actions';
 import * as C from '../Compo';
 import * as CU from '../CompoUnit';
-import SelfNaviCompo from '../ZdebugUX/AniView';
 
 class SceneInitial extends Component {
   constructor(props) {
@@ -46,10 +45,14 @@ class SceneInitial extends Component {
     this.setState({ isOpen: false });
     setTimeout(() => {
       this.refs.rtxt001.measure((fx, fy, width, height, px, py) => {
-        console.log(`${py} + ${height}`);
         this.refs.ani01.startShowUp(py + height);
       });
     }, 500);
+  }
+
+  disappearView() {
+    console.log(' on Press Callback ');
+    this.refs.ani01.startToDisappear();
   }
 
   renderMain() {
@@ -68,26 +71,24 @@ class SceneInitial extends Component {
           text={'>> UI TEST Scene'}
           onPressCallback={Actions.debugMainUX}
         />
-
+        <C.MnButton
+          text={'Disappear ..'}
+          onPressCallback={this.disappearView.bind(this)}
+        />
 
         <Text ref="rtxt001" style={esty.nameText}>실제 받는 금액 비교 </Text>
 
-        <SelfNaviCompo />
-
-
-
         <C.AniNaviView
           ref="ani01"
-          content={<Text style={esty.nameText}> Swipe </Text>}
-
-          refCompo={this.refs.rtxt001}
-          top={400}
-
+          content={
+            <C.MnButton
+              text={'.. Disappear ..'}
+              onPressCallback={this.disappearView.bind(this)}
+            />
+          }
         />
 
-        {console.log(' end of render')}
-
-        <View style={{ flex: 30 }} />
+        <View style={{ flex: 20 }} />
 
       </View>
     );

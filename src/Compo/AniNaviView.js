@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  View, Animated, Text, PanResponder, Dimensions,
+  View, Animated, Text, PanResponder, Dimensions, TouchableOpacity,
   LayoutAnimation, UIManager
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -21,27 +21,6 @@ class AniNaviView extends Component {
       };
   }
 
-  componentWillMount() {
-    this.waitForRefCompo()
-      .then((compo) => {
-        this.setState({ isLoading: false });
-      });
-  }
-
-  componentDidMount() {
-    console.log('  AniNaviView :: componentDidMount');
-    this.startAnimation(0, 1);
-  }
-
-  async waitForRefCompo() {
-    return new Promise((resolve, reject) => {
-      if (this.props.refCompo !== undefined) {
-        console.log('\n\n\n\n resolve ><><><><>><<>><><<><>><><');
-        resolve(this.props.refCompo);
-      }
-    });
-  }
-
   startAnimation(tarX, tarOpa) {
     Animated.timing(this.state.poX,
       { toValue: tarX, duration: SWIPE_DURATION }
@@ -51,63 +30,53 @@ class AniNaviView extends Component {
     ).start();
   }
 
-  // public
+  // public :: 나타나는 애니메이션 시작
   startShowUp(py) {
+    this.startAnimation(0, 1);
     this.setState({ isLoading: false, top: py });
   }
-
+  // public :: 엔딩...
   startToDisappear() {
     this.startAnimation(-SCREEN_WIDTH, 0);
   }
 
-  getTopDistance() {
-    if (this.props.refCompo === undefined) {
-      console.log(' this.props.refCompo === undefined ');
-      return 0;
-    }
-    this.props.refCompo.measure((fx, fy, width, height, px, py) => {
-      console.log(`   refCompo ::  px : ${px}, py : ${py} `);
-      return py;
-    });
-  }
-
   render() {
       const { isLoading, fadeAnim, poX, top } = this.state;
-
-      const { height, width = SCREEN_WIDTH, content
-         } = this.props;
-
-
-
+      const { height, width = SCREEN_WIDTH, content } = this.props;
       if (isLoading) {
         return null;
       }
-
-      //const top = this.getTopDistance();
-
       return (
         <Animated.View                 // Special animatable View
-          style={{
-            position: 'absolute',
-            left: poX, top,
-
-            width, height, backgroundColor: '#9AB',
-            opacity: fadeAnim,         // Bind opacity to animated value
-          }}
+          style={[styles.container,
+            { top, width, height, opacity: fadeAnim, left: poX, // Animation
+          }]}
         >
           {content}
+
+          <C.MnButton
+            text={'.. Disappear ..'}
+            onPressCallback={() => {
+              console.log('   dldldl  ');
+            }}
+          />
+
+          <TouchableOpacity
+            onPress={this.startToDisappear.bind(this)}
+          >
+            <Text> Touch this </Text>
+          </TouchableOpacity>
+
         </Animated.View>
       );
     }
 }
 
 const styles = {
-  cardStyle: {
-    position: 'absolute',
-    backgroundColor: '#5EF',
-    width: SCREEN_WIDTH, height: 100
+  container: {
+    flex: 1, position: 'absolute', alignItems: 'stretch',
+    width: SCREEN_WIDTH,
   },
-
 };
 
 export { AniNaviView };

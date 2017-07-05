@@ -41,6 +41,8 @@ class MnButton extends Component {
 const sty = StyleSheet.create({
   bttnSty: {
     flex: 1, // alignItems: 'stretch' // backgroundColor: '#999'
+    backgroundColor: '#9F9'
+
   },
   txtSty: {
     flex: 1, textAlign: 'center', color: 'navy', fontSize: 16
