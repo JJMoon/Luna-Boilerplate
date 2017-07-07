@@ -78,6 +78,8 @@ class SceneInitial extends Component {
 
         <Text ref="rtxt001" style={esty.nameText}>실제 받는 금액 비교 </Text>
 
+        <View style={{ flex: 20 }} />
+
         <C.AniNaviView
           ref="ani01"
           content={
@@ -87,8 +89,6 @@ class SceneInitial extends Component {
             />
           }
         />
-
-        <View style={{ flex: 20 }} />
 
       </View>
     );
