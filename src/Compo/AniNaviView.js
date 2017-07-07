@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
-import {
-  View, Animated, Text, PanResponder, Dimensions, TouchableOpacity,
-  LayoutAnimation, UIManager
-} from 'react-native';
+import { Animated, Dimensions } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-import * as C from '../Compo';
+/* ====== ====== ====== ====== ====== ====== ====== ======
+// 내비게이션 효과의 애니메이션. 오른쪽에서 왼쪽으로 이동.
+// Code Example
 
+<C.AniNaviView
+  ref="ani01"
+  content={
+    <C.MnButton
+      text={'.. Disappear ..'}
+      onPressCallback={this.disappearView.bind(this)}
+    />
+  }
+/>
+
+====== ====== ====== ====== ====== ====== ====== ====== */
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_DURATION = 250;
 
@@ -47,26 +57,13 @@ class AniNaviView extends Component {
         return null;
       }
       return (
-        <Animated.View                 // Special animatable View
-          style={[styles.container,
-            { top, width, height, opacity: fadeAnim, left: poX, // Animation
+        <Animated.View
+          style={[
+            styles.container,
+            { top, width, height, opacity: fadeAnim, left: poX,
           }]}
         >
           {content}
-
-          <C.MnButton
-            text={'.. Disappear ..'}
-            onPressCallback={() => {
-              console.log('   dldldl  ');
-            }}
-          />
-
-          <TouchableOpacity
-            onPress={this.startToDisappear.bind(this)}
-          >
-            <Text> Touch this </Text>
-          </TouchableOpacity>
-
         </Animated.View>
       );
     }

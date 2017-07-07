@@ -55,9 +55,11 @@ class SceneInitial extends Component {
     this.refs.ani01.startToDisappear();
   }
 
-  renderMain() {
-    // onPressCallback={this.toggleSideMenu.bind(this)}
+  disappearViewFunc(refName) {
+    return (() => { this.refs[refName].startToDisappear(); });
+  }
 
+  renderMain() {
     return (
       <View style={esty.mainContainer} >
 
@@ -85,7 +87,7 @@ class SceneInitial extends Component {
           content={
             <C.MnButton
               text={'.. Disappear ..'}
-              onPressCallback={this.disappearView.bind(this)}
+              onPressCallback={this.disappearViewFunc('ani01')}
             />
           }
         />
@@ -101,7 +103,7 @@ class SceneInitial extends Component {
 
 const esty = EStyleSheet.create({
   mainContainer: {
-    flex: 100, width: '100%', backgroundColor: '#FAF'
+    flex: 100, width: '100%', backgroundColor: '#FFF'
   },
   topContainer: {
     flex: 1, height: '172 * $scrRt',
@@ -121,4 +123,3 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, actions)(SceneInitial);
-// connect() 에서 함수를 리턴하면 거기에 SceneConnect 를 전달함..
