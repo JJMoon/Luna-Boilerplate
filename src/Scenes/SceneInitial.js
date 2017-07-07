@@ -18,6 +18,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import * as actions from '../rdx-actions';
 import * as C from '../Compo';
 import * as CU from '../CompoUnit';
+import { genFunctionObj } from '../Util';
 
 class SceneInitial extends Component {
   constructor(props) {
@@ -43,11 +44,11 @@ class SceneInitial extends Component {
   componentDidMount() {
     console.log('\n ====== ====== ====== ======  [[ SceneInitial :: componentDidMount ]]');
     this.setState({ isOpen: false });
-    setTimeout(() => {
-      this.refs.rtxt001.measure((fx, fy, width, height, px, py) => {
-        this.refs.ani01.startShowUp(py + height);
-      });
-    }, 500);
+    // setTimeout(() => {
+    //   this.refs.rtxt001.measure((fx, fy, width, height, px, py) => {
+    //     this.refs.ani01.startShowUp(py + height);
+    //   });
+    // }, 500);
   }
 
   disappearView() {
@@ -55,9 +56,6 @@ class SceneInitial extends Component {
     this.refs.ani01.startToDisappear();
   }
 
-  disappearViewFunc(refName) {
-    return (() => { this.refs[refName].startToDisappear(); });
-  }
 
   renderMain() {
     return (
@@ -83,11 +81,11 @@ class SceneInitial extends Component {
         <View style={{ flex: 20 }} />
 
         <C.AniNaviView
-          ref="ani01"
+          ref="ani01" refObj={this.refs.rtxt001}
           content={
             <C.MnButton
               text={'.. Disappear ..'}
-              onPressCallback={this.disappearViewFunc('ani01')}
+              onPressCallback={genFunctionObj(this.refs.ani01, 'disappear')}
             />
           }
         />

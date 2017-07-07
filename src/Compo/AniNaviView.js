@@ -7,11 +7,11 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 // Code Example
 
 <C.AniNaviView
-  ref="ani01"
+  ref="ani01" refObj={this.refs.rtxt001}
   content={
     <C.MnButton
       text={'.. Disappear ..'}
-      onPressCallback={this.disappearView.bind(this)}
+      onPressCallback={genFunctionObj(this.refs.ani01, 'disappear')}
     />
   }
 />
@@ -29,6 +29,17 @@ class AniNaviView extends Component {
         poX: new Animated.Value(SCREEN_WIDTH),
         fadeAnim: new Animated.Value(0), // 0 : invisible.
       };
+    this.disappear = this.startToDisappear.bind(this);
+  }
+
+
+  componentDidMount() {
+    // 기준 되는 컴퍼넌트에서 좌표 가져옴.
+    setTimeout(() => {
+      this.props.refObj.measure((fx, fy, width, height, px, py) => {
+        this.startShowUp(py + height);
+      });
+    }, 400);
   }
 
   startAnimation(tarX, tarOpa) {
