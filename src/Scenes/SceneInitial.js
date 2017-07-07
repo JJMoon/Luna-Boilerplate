@@ -51,12 +51,6 @@ class SceneInitial extends Component {
     // }, 500);
   }
 
-  disappearView() {
-    console.log(' on Press Callback ');
-    this.refs.ani01.startToDisappear();
-  }
-
-
   renderMain() {
     return (
       <View style={esty.mainContainer} >
@@ -71,12 +65,8 @@ class SceneInitial extends Component {
           text={'>> UI TEST Scene'}
           onPressCallback={Actions.debugMainUX}
         />
-        <C.MnButton
-          text={'Disappear ..'}
-          onPressCallback={this.disappearView.bind(this)}
-        />
-
-        <Text ref="rtxt001" style={esty.nameText}>실제 받는 금액 비교 </Text>
+        
+        <Text ref="rtxt001" style={esty.nameText}> 이름 텍스트 스타일 </Text>
 
         <View style={{ flex: 20 }} />
 
