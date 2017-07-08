@@ -1,24 +1,38 @@
 import React, { Component } from 'react';
-import {
-  View, Animated, Text, PanResponder, Dimensions, TouchableOpacity,
-  LayoutAnimation, UIManager
-} from 'react-native';
+import { Animated, Dimensions } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-import * as C from '../Compo';
-
+/* Code Example
+// 내비게이션 효과의 애니메이션. 오른쪽에서 왼쪽으로 이동.
+================================================================================
+<C.AniNaviView
+  key="1"
+  ref="ani01" refObj={this.refs.rtxt001}
+  content={<View />}
+/>
+================================================================================
+*/
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_DURATION = 250;
 
 class AniNaviView extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
         isLoading: true,
         poX: new Animated.Value(SCREEN_WIDTH),
         fadeAnim: new Animated.Value(0), // 0 : invisible.
       };
+    this.disappear = this.startToDisappear.bind(this);
+  }
+
+  componentDidMount() {
+    // 기준 되는 컴퍼넌트에서 좌표 가져옴.
+    setTimeout(() => {
+      this.props.refObj.measure((fx, fy, width, height, px, py) => {
+        this.startShowUp(py + height);
+      });
+    }, 500);
   }
 
   startAnimation(tarX, tarOpa) {
@@ -41,35 +55,24 @@ class AniNaviView extends Component {
   }
 
   render() {
-      const { isLoading, fadeAnim, poX, top } = this.state;
-      const { height, width = SCREEN_WIDTH, content } = this.props;
-      if (isLoading) {
-        return null;
-      }
-      return (
-        <Animated.View                 // Special animatable View
-          style={[styles.container,
-            { top, width, height, opacity: fadeAnim, left: poX, // Animation
-          }]}
-        >
-          {content}
-
-          <C.MnButton
-            text={'.. Disappear ..'}
-            onPressCallback={() => {
-              console.log('   dldldl  ');
-            }}
-          />
-
-          <TouchableOpacity
-            onPress={this.startToDisappear.bind(this)}
-          >
-            <Text> Touch this </Text>
-          </TouchableOpacity>
-
-        </Animated.View>
-      );
+    const { isLoading, fadeAnim, poX, top } = this.state;
+    const { height, width = SCREEN_WIDTH, content } = this.props;
+    if (isLoading) {
+      return null;
     }
+
+    console.log(this);
+    return (
+      <Animated.View
+        style={[
+          styles.container,
+          { top, width, height, opacity: fadeAnim, left: poX,
+        }]}
+      >
+        {content}
+      </Animated.View>
+    );
+  }
 }
 
 const styles = {

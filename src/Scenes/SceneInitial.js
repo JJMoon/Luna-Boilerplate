@@ -18,13 +18,14 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import * as actions from '../rdx-actions';
 import * as C from '../Compo';
 import * as CU from '../CompoUnit';
+import { genFunctionObj, genFunctionOfRef } from '../Util';
 
 class SceneInitial extends Component {
   constructor(props) {
     super(props);
     console.log('\n\n\n\n\n ====== ====== ====== ======  [[ SceneMain :: constructor ]] 앱 시작.....\n');
     this.props.actInit();
-    //this.state = { cnt: 0 };
+    this.state = { viewCnt: 0 };
   }
 
   ////////////////////////////////////////////////////   _//////////////////_   component life cycle
@@ -43,20 +44,56 @@ class SceneInitial extends Component {
   componentDidMount() {
     console.log('\n ====== ====== ====== ======  [[ SceneInitial :: componentDidMount ]]');
     this.setState({ isOpen: false });
-    setTimeout(() => {
-      this.refs.rtxt001.measure((fx, fy, width, height, px, py) => {
-        this.refs.ani01.startShowUp(py + height);
-      });
-    }, 500);
   }
 
-  disappearView() {
-    console.log(' on Press Callback ');
-    this.refs.ani01.startToDisappear();
+  additional() {
+    console.log('additional');
+    this.setState({ viewCnt: 1 });
+  }
+
+  getAniView(cnt) {
+    switch (cnt) {
+      case 0:
+        return (<C.AniNaviView
+          key="1"
+          ref="ani01" refObj={this.refs.rtxt001}
+          content={
+            <C.MnButton
+              text={'.. Disappear ..'}
+              onPressCallback={genFunctionObj(this.refs.ani01, 'disappear')}
+              additional={() => this.setState({ viewCnt: 1 })} delay={300}
+            />
+          }
+        />);
+      case 1:
+        return (<C.AniNaviView
+          key="3"
+          ref="ani02" refObj={this.refs.rtxt001}
+          content={
+            <C.MnButton
+              text={'.. Disappear 2 ..'}
+              onPressCallback={genFunctionOfRef(this, 'disappear', 'ani02')}
+              additional={() => this.setState({ viewCnt: 2 })} delay={300}
+            />
+          }
+        />);
+      default:
+        return (<C.AniNaviView
+          key="2"
+          ref="ani03" refObj={this.refs.rtxt001}
+          content={
+            <C.MnButton
+              text={'.. Second View ..'}
+              onPressCallback={genFunctionOfRef(this, 'disappear', 'ani03')}
+              additional={null}
+            />
+          }
+        />);
+    }
   }
 
   renderMain() {
-    // onPressCallback={this.toggleSideMenu.bind(this)}
+    const { viewCnt } = this.state;
 
     return (
       <View style={esty.mainContainer} >
@@ -71,24 +108,12 @@ class SceneInitial extends Component {
           text={'>> UI TEST Scene'}
           onPressCallback={Actions.debugMainUX}
         />
-        <C.MnButton
-          text={'Disappear ..'}
-          onPressCallback={this.disappearView.bind(this)}
-        />
 
-        <Text ref="rtxt001" style={esty.nameText}>실제 받는 금액 비교 </Text>
+        <Text ref="rtxt001" style={esty.nameText}> 이름 텍스트 스타일 </Text>
 
         <View style={{ flex: 20 }} />
 
-        <C.AniNaviView
-          ref="ani01"
-          content={
-            <C.MnButton
-              text={'.. Disappear ..'}
-              onPressCallback={this.disappearView.bind(this)}
-            />
-          }
-        />
+        {this.getAniView(viewCnt)}
 
       </View>
     );
@@ -101,7 +126,7 @@ class SceneInitial extends Component {
 
 const esty = EStyleSheet.create({
   mainContainer: {
-    flex: 100, width: '100%', backgroundColor: '#FAF'
+    flex: 100, width: '100%', backgroundColor: '#FFF'
   },
   topContainer: {
     flex: 1, height: '172 * $scrRt',
@@ -121,4 +146,3 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, actions)(SceneInitial);
-// connect() 에서 함수를 리턴하면 거기에 SceneConnect 를 전달함..
