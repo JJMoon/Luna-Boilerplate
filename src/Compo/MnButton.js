@@ -11,29 +11,42 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
-/*
-사용 example =========================================================================================
+/* Code Example
 import * as C from '../Compo';
+================================================================================
 <C.MnButton
   txtSty={{ textAlign: 'right' }}
   text={text} margin={margin}
   onPressCallback={() => console.log('bttn click')}
+  additional={() => this.setState({ viewCnt: 1 })} delay={300}
 />
-=========================================================================================
+================================================================================
 */
 
 class MnButton extends Component {
   render() {
-    const { txtSty, btnSty, text, margin = 0, onPressCallback } = this.props;
+    const { txtSty, btnSty, text, margin = 0 } = this.props;
 
     return (
       <TouchableOpacity
         style={[sty.bttnSty, btnSty, { margin }]}
-        onPress={onPressCallback}
+        onPress={this.pressAction.bind(this)}
       >
         <Text style={[sty.txtSty, txtSty]}>{text}</Text>
       </TouchableOpacity>
     );
+  }
+
+  pressAction() {
+    const { onPressCallback, additional, delay } = this.props;
+    onPressCallback();
+    console.log('  additional >>> ');
+    console.log(delay);
+    if (additional) {
+      setTimeout(() => {
+        additional();
+      }, delay);
+    }
   }
 }
 
