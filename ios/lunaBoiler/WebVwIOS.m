@@ -84,9 +84,8 @@ RCT_EXPORT_VIEW_PROPERTY(isTest, BOOL);
 
 - (void)webToNativeCall
 {
-  //NSString *returnvalue =  [self.webviewForHtml stringByEvaluatingJavaScriptFromString:@"getText()"];
-  
-  NSString *js = [NSString stringWithFormat:@"document.getElementById(\"txtt\").innerHTML = \" webToNativeCall : %d \" ", cnt];
+  NSString *theS = [NSString stringWithFormat:@" \" edited from objective - c >>> cnt :: %d \" ", cnt];
+  NSString *js = [NSString stringWithFormat:@"document.getElementById(\"txtt\").innerHTML = %@", theS];
   [webVw stringByEvaluatingJavaScriptFromString:js];
   
   //self.valueFromBrowser.text = [NSString stringWithFormat:@"From browser : %@", returnvalue ];

@@ -29,8 +29,9 @@ import SideMenuMain from '../Scenes/SideMenuMain';
 //const BleLinkconModuleAndroid = NativeModules.BleLinkconModuleAndroid;
 
 import WebViewAndroid from '../WebviewContent/WebAndroidView';
+import WebViewIOS from '../WebviewContent/WebIosView';
 
-const WebViewIOS = requireNativeComponent('WebVwIOS', null);
+// const WebViewIOS = requireNativeComponent('WebVwIOS', null);
 
 class UXdebugMain extends Component {
   constructor(props) {
