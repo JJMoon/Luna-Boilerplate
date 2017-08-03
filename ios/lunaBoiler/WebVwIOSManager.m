@@ -17,7 +17,15 @@
 
 @interface WebVwIOSManager : RCTViewManager <UIWebViewDelegate>
 
-@property (nonatomic, assign) NSNumber *tNum;
+
+
+//@property (nonatomic, assign) NSNumber *tNum;
+
+@end
+
+@interface WebVwIOSManager() {
+  RCTResponseSenderBlock logoutCB;
+}
 
 @end
 
@@ -31,15 +39,17 @@ BOOL isTest;
 
 RCT_EXPORT_MODULE();
 
-//- (void)setIsTest:(BOOL)it {
-//  isTest = it;
-//}
-
-// Firebase 관련 세팅
-RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
-  RCTLogInfo(@"\n\n\n\n Obj c >> ReactIosAuth :: fetchFirToken \n\n .");
+// Logout Callback Setting
+RCT_EXPORT_METHOD(setLogoutCallback:(RCTResponseSenderBlock)callback) {
+  RCTLogInfo(@"\n\n\n\n Obj c >> ReactIosAuth :: setLogoutCallback \n\n\n\n .");
   
-  NSUserDefaults *defls = [NSUserDefaults standardUserDefaults];
+  logoutCB = callback;
+}
+
+
+// Login Info.
+RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
+  RCTLogInfo(@"\n\n\n\n Obj c >> ReactIosAuth :: loginInfo \n\n .");
   
   NSError *jsonError;
   NSData *objectData = [jStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -53,10 +63,8 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   } else {
     return;
   }
-
-  NSLog(@"   login info : %@,   dic : %@", jStr, jDic);
-  NSLog(@"\n\n Parsed :: type : %@  \n\n", authType);
-  
+  NSLog(@"   login info : %@,   dic : %@     type : %@", jStr, jDic, authType);
+  NSUserDefaults *defls = [NSUserDefaults standardUserDefaults];
   [defls setObject:jStr forKey:@"authInfo"];
 }
 
@@ -125,6 +133,18 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   if (jStr != nil) {
     NSLog(@"\n\n\n    already got auth Info ::   %@ \n\n\n", jStr);
   }
+  
+  
+  
+  //dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 10 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+  //});
+  if (logoutCB != nil) {
+    logoutCB(@[[NSNull null], @" from obj c "]); // naverTokenSend(@[[NSNull null], token]);
+  }
+  
+  
+  
+  
   
   
   //NSString *someVariable = [webView stringByEvaluatingJavaScriptFromString:@"window.main"];

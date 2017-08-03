@@ -79,6 +79,14 @@ class UXdebugMain extends Component {
     console.log(JSON.stringify(sendMessage));
 
     iosNativeModule.loginInfo(JSON.stringify(sendMessage));
+    // RCT_EXPORT_METHOD(setLogoutCallback:(RCTResponseSenderBlock)callback) {
+    iosNativeModule.setLogoutCallback((error, str) => {
+      if (error) {
+        console.error(error);
+      } else {
+        console.log(`  returned from obj c ::  ${str}`);
+      }
+    });
   }
 
   renderWebView() {
