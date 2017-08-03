@@ -101,6 +101,10 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   
   cnt++;
   
+  if ([[[request URL] absoluteString] hasPrefix:@"ios:logout"]) {
+    [self logOut];
+  }
+  
   if ([[[request URL] absoluteString] hasPrefix:@"ios:"]) {
     // Call the given selector
     [self performSelector:@selector(webToNativeCall)];
@@ -110,19 +114,20 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   return YES;
 }
 
-//- (void)injectJavascript:(NSString *)resource {
-//  NSString *jsPath = [[NSBundle mainBundle] pathForResource:resource ofType:@"js"];
-//  NSString *js = [NSString stringWithContentsOfFile:jsPath encoding:NSUTF8StringEncoding error:NULL];
-//  
-//  [self.webView stringByEvaluatingJavaScriptFromString:js];
-//}
+- (void)logOut {
+  if (logoutCB == nil) {
+    NSLog(@"\n\n\n logoutCB == nil \n\n\n");
+  } else {
+    logoutCB(@[[NSNull null], @" from obj c "]); // naverTokenSend(@[[NSNull null], token]);
+    logoutCB = nil;
+  }
+}
 
-
-- (void)webToNativeCall
-{
+- (void)webToNativeCall {
   NSString *theS = [NSString stringWithFormat:@" \" edited from objective - c >>> cnt :: %d \" ", cnt];
   NSString *js = [NSString stringWithFormat:@"document.getElementById(\"txtt\").innerHTML = %@", theS];
   [webVw stringByEvaluatingJavaScriptFromString:js];
+  
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
@@ -138,9 +143,7 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   
   //dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 10 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
   //});
-  if (logoutCB != nil) {
-    logoutCB(@[[NSNull null], @" from obj c "]); // naverTokenSend(@[[NSNull null], token]);
-  }
+  
   
   
   

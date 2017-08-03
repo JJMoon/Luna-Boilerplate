@@ -42,17 +42,11 @@ class UXdebugMain extends Component {
     console.log('\n\n\n\n\n ====== ====== ====== ======  [[ UXdebugMain  :: constructor ]]  .....\n');
     console.log(`   PixelRatio :: ${PixelRatio.get()}`);
     this.state = {
+      login: 'Init',
       someTest: 'value',
       id: 'id'
     };
-
-
     const rss = JSON.stringify(this.state);
-
-    console.log(rss);
-
-
-
   }
 
   ////////////////////////////////////////////////////   _//////////////////_   component life cycle
@@ -61,8 +55,6 @@ class UXdebugMain extends Component {
 
   componentWillMount() {
     console.log('\n ====== ====== ====== ======  [[ UXdebugMain :: componentWillMount ]]');
-
-
   }
 
   componentWillUnmount() {
@@ -84,6 +76,7 @@ class UXdebugMain extends Component {
       if (error) {
         console.error(error);
       } else {
+        this.setState({ login: 'ios logOut' });
         console.log(`  returned from obj c ::  ${str}`);
       }
     });
@@ -99,27 +92,35 @@ class UXdebugMain extends Component {
     );
   }
 
+  renderIosWebView() {
+    return (
+      <WebIosView
+        style={{ flex: 8 }}
+      />
+    ); // loginInfo={'{ "login info": "not yet" }'}  isTest={true}
+  }
+
+  renderState() {
+    const { login } = this.state;
+    return (
+      <View style={{ flex: 1, backgroundColor: '#DEF' }} >
+        <Text style={esty.txtx}> Login : {login}</Text>
+
+      </View>
+    );
+  }
 
   ////////////////////////////////////////////////////   _//////////////////_   render
   render() {
     //return (<CU.MnSideMenu main={this.renderMain()} />);
-
-    if (Platform.OS === 'ios') {
-      return (
-        <WebIosView
-          style={{ flex: 1 }}
-        />
-      ); // loginInfo={'{ "login info": "not yet" }'}  isTest={true}
-    }
-
-    return this.renderWebView();
+    const webVw = Platform.OS === 'ios' ? this.renderIosWebView() : this.renderWebView();
+    return (
+      <View style={{ flex: 10, marginTop: 50 }}>
+        {this.renderState()}
+        {webVw}
+      </View>
+    ); // loginInfo={'{ "login info": "not yet" }'}  isTest={true}
   }
-
-  // renderNativeWebview() {
-  //   if (Platform.OS === 'ios') {
-  //     BridgeIOS.initMessage();
-  //   }
-  // }
 
   renderMain() {
     const { scr } = this.props.main;
