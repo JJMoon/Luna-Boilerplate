@@ -28,8 +28,9 @@ import SideMenuMain from '../Scenes/SideMenuMain';
 //const BridgeIOS = NativeModules.BridgeIOS;
 //const BleLinkconModuleAndroid = NativeModules.BleLinkconModuleAndroid;
 
+import WebViewAndroid from '../WebviewContent/WebAndroidView';
+
 const WebViewIOS = requireNativeComponent('WebVwIOS', null);
-const WebViewAndrd = requireNativeComponent('WebVwAndrd', null);
 
 class UXdebugMain extends Component {
   constructor(props) {
@@ -71,6 +72,15 @@ class UXdebugMain extends Component {
 
   }
 
+  renderWebView() {
+    return (
+      <WebViewAndroid
+        style={esty.scrll}
+        type={'EMAIL_LOGIN_From JS'}
+        loadUrl={'file:///android_asset/index.html'}
+      />
+    );
+  }
 
 
   ////////////////////////////////////////////////////   _//////////////////_   render
@@ -87,7 +97,7 @@ class UXdebugMain extends Component {
       );
     }
 
-    return this.renderMain();
+    return this.renderWebView();
   }
 
   // renderNativeWebview() {
@@ -167,6 +177,9 @@ const esty = EStyleSheet.create({
   titleSty: {
     fontSize: '$fontSzTitle', color: '$navy'
   },
+  andrWeb: {
+    width: '100%', height: '100%'
+  }
 
 });
 
