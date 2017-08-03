@@ -9,6 +9,7 @@
 	"dependencies": {
 		"immutability-helper": "^2.2.2",
 		"jshint": "^2.9.5",
+		"prop-types": "^15.5.10",
 		"react": "16.0.0-alpha.12",
 		"react-native": "0.47.1",
 		"react-native-elements": "^0.13.0",

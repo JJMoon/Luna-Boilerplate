@@ -15,22 +15,58 @@
 
 #import <MapKit/MapKit.h>
 
-@interface WebVwIOS : RCTViewManager <UIWebViewDelegate>
+@interface WebVwIOSManager : RCTViewManager <UIWebViewDelegate>
 
 
+
+//@property (nonatomic, assign) NSNumber *tNum;
+
+@end
+
+@interface WebVwIOSManager() {
+  RCTResponseSenderBlock logoutCB;
+}
 
 @end
 
 ////////////////////////////////////////////////////     _//////////_
-@implementation WebVwIOS
+@implementation WebVwIOSManager
 
 UIWebView *webVw;
 int cnt = 0;
 
+BOOL isTest;
+
 RCT_EXPORT_MODULE();
 
-RCT_EXPORT_VIEW_PROPERTY(isTest, BOOL);
+// Logout Callback Setting
+RCT_EXPORT_METHOD(setLogoutCallback:(RCTResponseSenderBlock)callback) {
+  RCTLogInfo(@"\n\n\n\n Obj c >> ReactIosAuth :: setLogoutCallback \n\n\n\n .");
+  
+  logoutCB = callback;
+}
 
+
+// Login Info.
+RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
+  RCTLogInfo(@"\n\n\n\n Obj c >> ReactIosAuth :: loginInfo \n\n .");
+  
+  NSError *jsonError;
+  NSData *objectData = [jStr dataUsingEncoding:NSUTF8StringEncoding];
+  NSDictionary *jDic = [NSJSONSerialization JSONObjectWithData:objectData
+                                                       options:NSJSONReadingMutableContainers
+                                                         error:&jsonError];
+  NSString *authType; //, *email, *passWord, *token;
+  NSDictionary *tp = [jDic objectForKey:@"type"];
+  if (tp) {
+    authType = [jDic objectForKey:@"type"];
+  } else {
+    return;
+  }
+  NSLog(@"   login info : %@,   dic : %@     type : %@", jStr, jDic, authType);
+  NSUserDefaults *defls = [NSUserDefaults standardUserDefaults];
+  [defls setObject:jStr forKey:@"authInfo"];
+}
 
 - (UIView *)view {
   UIWebView *theWeb = [[UIWebView alloc] init];
@@ -65,6 +101,10 @@ RCT_EXPORT_VIEW_PROPERTY(isTest, BOOL);
   
   cnt++;
   
+  if ([[[request URL] absoluteString] hasPrefix:@"ios:logout"]) {
+    [self logOut];
+  }
+  
   if ([[[request URL] absoluteString] hasPrefix:@"ios:"]) {
     // Call the given selector
     [self performSelector:@selector(webToNativeCall)];
@@ -74,23 +114,41 @@ RCT_EXPORT_VIEW_PROPERTY(isTest, BOOL);
   return YES;
 }
 
-//- (void)injectJavascript:(NSString *)resource {
-//  NSString *jsPath = [[NSBundle mainBundle] pathForResource:resource ofType:@"js"];
-//  NSString *js = [NSString stringWithContentsOfFile:jsPath encoding:NSUTF8StringEncoding error:NULL];
-//  
-//  [self.webView stringByEvaluatingJavaScriptFromString:js];
-//}
+- (void)logOut {
+  if (logoutCB == nil) {
+    NSLog(@"\n\n\n logoutCB == nil \n\n\n");
+  } else {
+    logoutCB(@[[NSNull null], @" from obj c "]); // naverTokenSend(@[[NSNull null], token]);
+    logoutCB = nil;
+  }
+}
 
-
-- (void)webToNativeCall
-{
+- (void)webToNativeCall {
   NSString *theS = [NSString stringWithFormat:@" \" edited from objective - c >>> cnt :: %d \" ", cnt];
   NSString *js = [NSString stringWithFormat:@"document.getElementById(\"txtt\").innerHTML = %@", theS];
   [webVw stringByEvaluatingJavaScriptFromString:js];
+  
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-  NSLog(@" Loading Finished Start \n\n\n");
+  NSLog(@"\n\n\n\n\n Loading Finished Start \n");
+  
+  NSUserDefaults *defls = [NSUserDefaults standardUserDefaults];  // //  auth start ...
+  NSString *jStr = [defls stringForKey:@"authInfo"];
+  if (jStr != nil) {
+    NSLog(@"\n\n\n    already got auth Info ::   %@ \n\n\n", jStr);
+  }
+  
+  
+  
+  //dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 10 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+  //});
+  
+  
+  
+  
+  
+  
   
   //NSString *someVariable = [webView stringByEvaluatingJavaScriptFromString:@"window.main"];
   
@@ -129,6 +187,8 @@ RCT_EXPORT_VIEW_PROPERTY(isTest, BOOL);
   
   // document.getElementById("txtt").innerHTML = "Hello World";
   
+  //NSLog(@"  check isTest %d", isTest);
+  
   
   NSLog(@"\n\n\n\n   postMessage finished  ");
 }
@@ -138,6 +198,12 @@ RCT_EXPORT_VIEW_PROPERTY(isTest, BOOL);
 
 //    [NSHTTPCookieStorage sharedHTTPCookieStorage].cookieAcceptPolicy = NSHTTPCookieAcceptPolicyAlways;
 
+
+RCT_EXPORT_VIEW_PROPERTY(isTest, BOOL);
+
+RCT_EXPORT_VIEW_PROPERTY(loginInfo, NSString);
+
+RCT_EXPORT_VIEW_PROPERTY(tNum, NSNumber);
 
 
 

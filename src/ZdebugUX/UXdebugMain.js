@@ -10,7 +10,7 @@
 
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, PixelRatio, LayoutAnimation, Platform, requireNativeComponent,
-  AsyncStorage,
+  AsyncStorage, NativeModules,
   TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { Button, SideMenu } from 'react-native-elements';
@@ -29,7 +29,10 @@ import SideMenuMain from '../Scenes/SideMenuMain';
 //const BleLinkconModuleAndroid = NativeModules.BleLinkconModuleAndroid;
 
 import WebViewAndroid from '../WebviewContent/WebAndroidView';
-import WebViewIOS from '../WebviewContent/WebIosView';
+import WebIosView from '../WebviewContent/WebIosView';
+
+const iosNativeModule = NativeModules.WebVwIOSManager;
+
 
 // const WebViewIOS = requireNativeComponent('WebVwIOS', null);
 
@@ -39,17 +42,11 @@ class UXdebugMain extends Component {
     console.log('\n\n\n\n\n ====== ====== ====== ======  [[ UXdebugMain  :: constructor ]]  .....\n');
     console.log(`   PixelRatio :: ${PixelRatio.get()}`);
     this.state = {
+      login: 'Init',
       someTest: 'value',
       id: 'id'
     };
-
-
     const rss = JSON.stringify(this.state);
-
-    console.log(rss);
-
-
-
   }
 
   ////////////////////////////////////////////////////   _//////////////////_   component life cycle
@@ -58,8 +55,6 @@ class UXdebugMain extends Component {
 
   componentWillMount() {
     console.log('\n ====== ====== ====== ======  [[ UXdebugMain :: componentWillMount ]]');
-
-
   }
 
   componentWillUnmount() {
@@ -67,10 +62,24 @@ class UXdebugMain extends Component {
   }
 
   async componentDidMount() {
-
     await AsyncStorage.setItem('theKey', 'this is from RN ');
 
+    const sendMessage = {
+      type : 'EMAIL_LOGIN',
+      data : { email: 'hyochan', password: 'password12' }
+    }
+    console.log(JSON.stringify(sendMessage));
 
+    iosNativeModule.loginInfo(JSON.stringify(sendMessage));
+    // RCT_EXPORT_METHOD(setLogoutCallback:(RCTResponseSenderBlock)callback) {
+    iosNativeModule.setLogoutCallback((error, str) => {
+      if (error) {
+        console.error(error);
+      } else {
+        this.setState({ login: 'ios logOut' });
+        console.log(`  returned from obj c ::  ${str}`);
+      }
+    });
   }
 
   renderWebView() {
@@ -83,29 +92,35 @@ class UXdebugMain extends Component {
     );
   }
 
+  renderIosWebView() {
+    return (
+      <WebIosView
+        style={{ flex: 8 }}
+      />
+    ); // loginInfo={'{ "login info": "not yet" }'}  isTest={true}
+  }
+
+  renderState() {
+    const { login } = this.state;
+    return (
+      <View style={{ flex: 1, backgroundColor: '#DEF' }} >
+        <Text style={esty.txtx}> Login : {login}</Text>
+
+      </View>
+    );
+  }
 
   ////////////////////////////////////////////////////   _//////////////////_   render
   render() {
     //return (<CU.MnSideMenu main={this.renderMain()} />);
-
-    if (Platform.OS === 'ios') {
-      return (
-        <View style={{ flex: 1 }} >
-          <WebViewIOS
-            style={{ flex: 1 }}
-          />
-        </View>
-      );
-    }
-
-    return this.renderWebView();
+    const webVw = Platform.OS === 'ios' ? this.renderIosWebView() : this.renderWebView();
+    return (
+      <View style={{ flex: 10, marginTop: 50 }}>
+        {this.renderState()}
+        {webVw}
+      </View>
+    ); // loginInfo={'{ "login info": "not yet" }'}  isTest={true}
   }
-
-  // renderNativeWebview() {
-  //   if (Platform.OS === 'ios') {
-  //     BridgeIOS.initMessage();
-  //   }
-  // }
 
   renderMain() {
     const { scr } = this.props.main;
