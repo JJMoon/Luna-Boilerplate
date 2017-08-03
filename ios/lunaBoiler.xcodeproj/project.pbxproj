@@ -37,7 +37,7 @@
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		9A544B351F32C9B000CB44CD /* BridgeIOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A544B321F32C9B000CB44CD /* BridgeIOS.m */; };
-		9A544B361F32C9B000CB44CD /* WebVwIOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A544B341F32C9B000CB44CD /* WebVwIOS.m */; };
+		9A544B361F32C9B000CB44CD /* WebVwIOSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A544B341F32C9B000CB44CD /* WebVwIOSManager.m */; };
 		9A544B5D1F32C9BA00CB44CD /* embeded in Resources */ = {isa = PBXBuildFile; fileRef = 9A544B5C1F32C9BA00CB44CD /* embeded */; };
 /* End PBXBuildFile section */
 
@@ -288,8 +288,7 @@
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		9A544B311F32C9B000CB44CD /* BridgeIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BridgeIOS.h; path = lunaBoiler/BridgeIOS.h; sourceTree = "<group>"; };
 		9A544B321F32C9B000CB44CD /* BridgeIOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BridgeIOS.m; path = lunaBoiler/BridgeIOS.m; sourceTree = "<group>"; };
-		9A544B331F32C9B000CB44CD /* WebVwIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebVwIOS.h; path = lunaBoiler/WebVwIOS.h; sourceTree = "<group>"; };
-		9A544B341F32C9B000CB44CD /* WebVwIOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebVwIOS.m; path = lunaBoiler/WebVwIOS.m; sourceTree = "<group>"; };
+		9A544B341F32C9B000CB44CD /* WebVwIOSManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebVwIOSManager.m; path = lunaBoiler/WebVwIOSManager.m; sourceTree = "<group>"; };
 		9A544B5C1F32C9BA00CB44CD /* embeded */ = {isa = PBXFileReference; lastKnownFileType = folder; path = embeded; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -530,8 +529,7 @@
 			children = (
 				9A544B311F32C9B000CB44CD /* BridgeIOS.h */,
 				9A544B321F32C9B000CB44CD /* BridgeIOS.m */,
-				9A544B331F32C9B000CB44CD /* WebVwIOS.h */,
-				9A544B341F32C9B000CB44CD /* WebVwIOS.m */,
+				9A544B341F32C9B000CB44CD /* WebVwIOSManager.m */,
 			);
 			name = WebView;
 			sourceTree = "<group>";
@@ -622,7 +620,11 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = RK64WGN69R;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
+					};
+					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = RK64WGN69R;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -990,7 +992,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				9A544B351F32C9B000CB44CD /* BridgeIOS.m in Sources */,
-				9A544B361F32C9B000CB44CD /* WebVwIOS.m in Sources */,
+				9A544B361F32C9B000CB44CD /* WebVwIOSManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1043,6 +1045,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = RK64WGN69R;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1064,6 +1067,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = RK64WGN69R;
 				INFOPLIST_FILE = lunaBoilerTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1082,6 +1086,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = RK64WGN69R;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/node_modules/react-native/React",
+				);
 				INFOPLIST_FILE = lunaBoiler/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1099,6 +1108,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RK64WGN69R;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/node_modules/react-native/React",
+				);
 				INFOPLIST_FILE = lunaBoiler/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (

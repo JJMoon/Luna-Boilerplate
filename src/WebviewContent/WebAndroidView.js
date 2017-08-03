@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { NativeModules, requireNativeComponent, View, Text } from 'react-native';
+import PropTypes from 'prop-types';
 
 class WebAndroidView extends Component {
 

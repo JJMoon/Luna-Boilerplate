@@ -15,22 +15,50 @@
 
 #import <MapKit/MapKit.h>
 
-@interface WebVwIOS : RCTViewManager <UIWebViewDelegate>
+@interface WebVwIOSManager : RCTViewManager <UIWebViewDelegate>
 
-
+@property (nonatomic, assign) NSNumber *tNum;
 
 @end
 
 ////////////////////////////////////////////////////     _//////////_
-@implementation WebVwIOS
+@implementation WebVwIOSManager
 
 UIWebView *webVw;
 int cnt = 0;
 
+BOOL isTest;
+
 RCT_EXPORT_MODULE();
 
-RCT_EXPORT_VIEW_PROPERTY(isTest, BOOL);
+//- (void)setIsTest:(BOOL)it {
+//  isTest = it;
+//}
 
+// Firebase 관련 세팅
+RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
+  RCTLogInfo(@"\n\n\n\n Obj c >> ReactIosAuth :: fetchFirToken \n\n .");
+  
+  NSUserDefaults *defls = [NSUserDefaults standardUserDefaults];
+  
+  NSError *jsonError;
+  NSData *objectData = [jStr dataUsingEncoding:NSUTF8StringEncoding];
+  NSDictionary *jDic = [NSJSONSerialization JSONObjectWithData:objectData
+                                                       options:NSJSONReadingMutableContainers
+                                                         error:&jsonError];
+  NSString *authType; //, *email, *passWord, *token;
+  NSDictionary *tp = [jDic objectForKey:@"type"];
+  if (tp) {
+    authType = [jDic objectForKey:@"type"];
+  } else {
+    return;
+  }
+
+  NSLog(@"   login info : %@,   dic : %@", jStr, jDic);
+  NSLog(@"\n\n Parsed :: type : %@  \n\n", authType);
+  
+  [defls setObject:jStr forKey:@"authInfo"];
+}
 
 - (UIView *)view {
   UIWebView *theWeb = [[UIWebView alloc] init];
@@ -90,7 +118,14 @@ RCT_EXPORT_VIEW_PROPERTY(isTest, BOOL);
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-  NSLog(@" Loading Finished Start \n\n\n");
+  NSLog(@"\n\n\n\n\n Loading Finished Start \n");
+  
+  NSUserDefaults *defls = [NSUserDefaults standardUserDefaults];  // //  auth start ...
+  NSString *jStr = [defls stringForKey:@"authInfo"];
+  if (jStr != nil) {
+    NSLog(@"\n\n\n    already got auth Info ::   %@ \n\n\n", jStr);
+  }
+  
   
   //NSString *someVariable = [webView stringByEvaluatingJavaScriptFromString:@"window.main"];
   
@@ -129,6 +164,8 @@ RCT_EXPORT_VIEW_PROPERTY(isTest, BOOL);
   
   // document.getElementById("txtt").innerHTML = "Hello World";
   
+  //NSLog(@"  check isTest %d", isTest);
+  
   
   NSLog(@"\n\n\n\n   postMessage finished  ");
 }
@@ -138,6 +175,12 @@ RCT_EXPORT_VIEW_PROPERTY(isTest, BOOL);
 
 //    [NSHTTPCookieStorage sharedHTTPCookieStorage].cookieAcceptPolicy = NSHTTPCookieAcceptPolicyAlways;
 
+
+RCT_EXPORT_VIEW_PROPERTY(isTest, BOOL);
+
+RCT_EXPORT_VIEW_PROPERTY(loginInfo, NSString);
+
+RCT_EXPORT_VIEW_PROPERTY(tNum, NSNumber);
 
 
 

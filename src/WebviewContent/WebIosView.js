@@ -1,7 +1,6 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { NativeModules, requireNativeComponent, View, Text } from 'react-native';
-
-const WebViewIOS = requireNativeComponent('WebVwIOS', null);
+import PropTypes from 'prop-types';
 
 class WebIosView extends Component {
 	constructor(props) {
@@ -10,23 +9,22 @@ class WebIosView extends Component {
 
 	render() {
     return (
-
-        <WebViewIOS
-          style={{ flex: 1 }}
-          {...this.props}
-        />
+      <WebVwIOS {...this.props} />
     );
 	}
 }
 
 WebIosView.propTypes = {
 	isTest: PropTypes.bool,
+  loginInfo: PropTypes.string,
+  tNum: PropTypes.number
 	// day: PropTypes.number,
 	// month: PropTypes.number,
 	// year: PropTypes.number,
 	// onDateChange: PropTypes.func,
-	...View.propTypes,
+	///...View.propTypes,
 }
 
+const WebVwIOS = requireNativeComponent('WebVwIOS', WebIosView);
 
 export default WebIosView;

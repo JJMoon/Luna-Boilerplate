@@ -10,7 +10,7 @@
 
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, PixelRatio, LayoutAnimation, Platform, requireNativeComponent,
-  AsyncStorage,
+  AsyncStorage, NativeModules,
   TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { Button, SideMenu } from 'react-native-elements';
@@ -29,7 +29,10 @@ import SideMenuMain from '../Scenes/SideMenuMain';
 //const BleLinkconModuleAndroid = NativeModules.BleLinkconModuleAndroid;
 
 import WebViewAndroid from '../WebviewContent/WebAndroidView';
-import WebViewIOS from '../WebviewContent/WebIosView';
+import WebIosView from '../WebviewContent/WebIosView';
+
+const iosNativeModule = NativeModules.WebVwIOSManager;
+
 
 // const WebViewIOS = requireNativeComponent('WebVwIOS', null);
 
@@ -67,10 +70,15 @@ class UXdebugMain extends Component {
   }
 
   async componentDidMount() {
-
     await AsyncStorage.setItem('theKey', 'this is from RN ');
 
+    const sendMessage = {
+      type : 'EMAIL_LOGIN',
+      data : { email: 'hyochan', password: 'password12' }
+    }
+    console.log(JSON.stringify(sendMessage));
 
+    iosNativeModule.loginInfo(JSON.stringify(sendMessage));
   }
 
   renderWebView() {
@@ -90,12 +98,10 @@ class UXdebugMain extends Component {
 
     if (Platform.OS === 'ios') {
       return (
-        <View style={{ flex: 1 }} >
-          <WebViewIOS
-            style={{ flex: 1 }}
-          />
-        </View>
-      );
+        <WebIosView
+          style={{ flex: 1 }}
+        />
+      ); // loginInfo={'{ "login info": "not yet" }'}  isTest={true}
     }
 
     return this.renderWebView();
