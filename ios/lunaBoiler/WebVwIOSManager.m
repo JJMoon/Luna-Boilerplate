@@ -63,6 +63,11 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   } else {
     return;
   }
+  
+  
+  [self performSelectorOnMainThread:@selector(login:) withObject:jStr waitUntilDone:NO];
+  
+  
   NSLog(@"   login info : %@,   dic : %@     type : %@", jStr, jDic, authType);
   NSUserDefaults *defls = [NSUserDefaults standardUserDefaults];
   [defls setObject:jStr forKey:@"authInfo"];
@@ -114,6 +119,12 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   return YES;
 }
 
+- (void)login:(NSString *)auth {
+  NSString *loginStr = [NSString stringWithFormat:@"login(%@);", auth];  // login
+  NSLog(@"  %@", loginStr);
+  [webVw stringByEvaluatingJavaScriptFromString:loginStr];
+}
+
 - (void)logOut {
   if (logoutCB == nil) {
     NSLog(@"\n\n\n logoutCB == nil \n\n\n");
@@ -137,7 +148,14 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   NSString *jStr = [defls stringForKey:@"authInfo"];
   if (jStr != nil) {
     NSLog(@"\n\n\n    already got auth Info ::   %@ \n\n\n", jStr);
+//    NSString *loginStr = [NSString stringWithFormat:@"login(%@);", jStr];  // login
+//    NSLog(@"  %@", loginStr);
+//    [webVw stringByEvaluatingJavaScriptFromString:loginStr];
   }
+  
+  
+  
+
   
   
   

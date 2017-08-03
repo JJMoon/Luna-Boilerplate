@@ -4,25 +4,29 @@
     <head> HEAD </head>
     
     <script type="text/javascript">
-        
         function myFunction() {
             document.getElementById("txtt").innerHTML = "This is Experiment ";
         }
-        function jsAlert() {
-            alert("Hello World")
-        }
-        function changeElement() {
-            document.getElementById("txtt").innerHTML = "Changed by changeElement()";
-        }
-        function sendMessageIOS() {
-            window.location = 'ios:webToNativeCall';
-        }
-        function logout() {
-            window.location = 'ios:logout';
-        }
-        document.addEventListener("experi", myFunction);
-        document.addEventListener("message", function() { document.getElementById("txtt").innerHTML = "Got Message"; });
-    </script>
+    function jsAlert() {
+        alert("Hello World")
+    }
+    function changeElement() {
+        document.getElementById("txtt").innerHTML = "Changed by changeElement()";
+    }
+    function sendMessageIOS() {
+        window.location = 'ios:webToNativeCall';
+    }
+    function login(str) {
+        console.log(str.type + "  >>>   " + str.data);
+        document.getElementById("txtt").innerHTML = "Login : " + str.type;
+        document.getElementById("dataTxt").innerHTML = " " + str.data.email + " , " + str.data.password;
+    }
+    function logout() {
+        window.location = 'ios:logout';
+    }
+    document.addEventListener("experi", myFunction);
+    document.addEventListener("message", function() { document.getElementById("txtt").innerHTML = "Got Message"; });
+        </script>
     
     <body onload="execDaumPostcode()">
         <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0"/>
@@ -32,6 +36,7 @@
         </div>
         
         <text id="txtt"> Initial Text </text>
+        <text id="dataTxt"> Initial dataTxt </text>
         
         <div>
             <button onclick="jsAlert()">JS Alert View</button>

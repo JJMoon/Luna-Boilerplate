@@ -64,13 +64,6 @@ class UXdebugMain extends Component {
   async componentDidMount() {
     await AsyncStorage.setItem('theKey', 'this is from RN ');
 
-    const sendMessage = {
-      type : 'EMAIL_LOGIN',
-      data : { email: 'hyochan', password: 'password12' }
-    }
-    console.log(JSON.stringify(sendMessage));
-
-    iosNativeModule.loginInfo(JSON.stringify(sendMessage));
     // RCT_EXPORT_METHOD(setLogoutCallback:(RCTResponseSenderBlock)callback) {
     iosNativeModule.setLogoutCallback((error, str) => {
       if (error) {
@@ -80,6 +73,18 @@ class UXdebugMain extends Component {
         console.log(`  returned from obj c ::  ${str}`);
       }
     });
+  }
+
+  loginAction() {
+    const sendMessage = {
+      type : 'EMAIL_LOGIN',
+      data : { email: 'hyochan', password: 'password12' }
+    }
+    console.log(JSON.stringify(sendMessage));
+
+    iosNativeModule.loginInfo(JSON.stringify(sendMessage));
+
+    this.setState({ login: ' ios logged in ' });
   }
 
   renderWebView() {
@@ -105,7 +110,10 @@ class UXdebugMain extends Component {
     return (
       <View style={{ flex: 1, backgroundColor: '#DEF' }} >
         <Text style={esty.txtx}> Login : {login}</Text>
-
+        <C.MnButton
+          text={'.. Log In ..'}
+          onPressCallback={this.loginAction.bind(this)}
+        />
       </View>
     );
   }

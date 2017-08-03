@@ -36,7 +36,6 @@
 		2DCD954D1E0B4F2C00145EB5 /* lunaBoilerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* lunaBoilerTests.m */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		9A544B351F32C9B000CB44CD /* BridgeIOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A544B321F32C9B000CB44CD /* BridgeIOS.m */; };
 		9A544B361F32C9B000CB44CD /* WebVwIOSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A544B341F32C9B000CB44CD /* WebVwIOSManager.m */; };
 		9A544B5D1F32C9BA00CB44CD /* embeded in Resources */ = {isa = PBXBuildFile; fileRef = 9A544B5C1F32C9BA00CB44CD /* embeded */; };
 /* End PBXBuildFile section */
@@ -286,8 +285,6 @@
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
-		9A544B311F32C9B000CB44CD /* BridgeIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BridgeIOS.h; path = lunaBoiler/BridgeIOS.h; sourceTree = "<group>"; };
-		9A544B321F32C9B000CB44CD /* BridgeIOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BridgeIOS.m; path = lunaBoiler/BridgeIOS.m; sourceTree = "<group>"; };
 		9A544B341F32C9B000CB44CD /* WebVwIOSManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebVwIOSManager.m; path = lunaBoiler/WebVwIOSManager.m; sourceTree = "<group>"; };
 		9A544B5C1F32C9BA00CB44CD /* embeded */ = {isa = PBXFileReference; lastKnownFileType = folder; path = embeded; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -527,8 +524,6 @@
 		9A544B5E1F32EF3800CB44CD /* WebView */ = {
 			isa = PBXGroup;
 			children = (
-				9A544B311F32C9B000CB44CD /* BridgeIOS.h */,
-				9A544B321F32C9B000CB44CD /* BridgeIOS.m */,
 				9A544B341F32C9B000CB44CD /* WebVwIOSManager.m */,
 			);
 			name = WebView;
@@ -991,7 +986,6 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				9A544B351F32C9B000CB44CD /* BridgeIOS.m in Sources */,
 				9A544B361F32C9B000CB44CD /* WebVwIOSManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
