@@ -21,10 +21,8 @@ class StatusBar extends Component {
 
   render() {
     if (Platform.OS === 'ios') {
-      console.log('ios');
       return this.renderIosBar();
     }
-    console.log('android');
     return null;
   }
 }
