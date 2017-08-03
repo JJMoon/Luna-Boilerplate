@@ -29,7 +29,7 @@ int cnt = 0;
 
 RCT_EXPORT_MODULE();
 
-//RCT_EXPORT_VIEW_PROPERTY(boolProp, BOOL);
+RCT_EXPORT_VIEW_PROPERTY(isTest, BOOL);
 
 
 - (UIView *)view {
