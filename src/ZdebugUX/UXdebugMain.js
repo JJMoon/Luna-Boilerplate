@@ -9,7 +9,8 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, PixelRatio, LayoutAnimation,
+import { View, StyleSheet, Text, PixelRatio, LayoutAnimation, Platform, requireNativeComponent,
+  AsyncStorage, NativeModules,
   TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { Button, SideMenu } from 'react-native-elements';
@@ -23,6 +24,17 @@ import * as CL from '../Compo/MnColor';
 import * as CU from '../CompoUnit';
 import SideMenuMain from '../Scenes/SideMenuMain';
 
+// iOS BLE Connection
+//const BridgeIOS = NativeModules.BridgeIOS;
+//const BleLinkconModuleAndroid = NativeModules.BleLinkconModuleAndroid;
+
+import WebViewAndroid from '../WebviewContent/WebAndroidView';
+import WebIosView from '../WebviewContent/WebIosView';
+
+const iosNativeModule = NativeModules.WebVwIOSManager;
+
+
+// const WebViewIOS = requireNativeComponent('WebVwIOS', null);
 
 class UXdebugMain extends Component {
   constructor(props) {
@@ -30,8 +42,11 @@ class UXdebugMain extends Component {
     console.log('\n\n\n\n\n ====== ====== ====== ======  [[ UXdebugMain  :: constructor ]]  .....\n');
     console.log(`   PixelRatio :: ${PixelRatio.get()}`);
     this.state = {
+      login: 'Init',
+      someTest: 'value',
+      id: 'id'
     };
-
+    const rss = JSON.stringify(this.state);
   }
 
   ////////////////////////////////////////////////////   _//////////////////_   component life cycle
@@ -46,12 +61,65 @@ class UXdebugMain extends Component {
     console.log('\n\n\n\n\n ====== ====== ====== ======  [[ UXdebugMain :: unmount ]] ...\n');
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    await AsyncStorage.setItem('theKey', 'this is from RN ');
+
+    const sendMessage = {
+      type : 'EMAIL_LOGIN',
+      data : { email: 'hyochan', password: 'password12' }
+    }
+    console.log(JSON.stringify(sendMessage));
+
+    iosNativeModule.loginInfo(JSON.stringify(sendMessage));
+    // RCT_EXPORT_METHOD(setLogoutCallback:(RCTResponseSenderBlock)callback) {
+    iosNativeModule.setLogoutCallback((error, str) => {
+      if (error) {
+        console.error(error);
+      } else {
+        this.setState({ login: 'ios logOut' });
+        console.log(`  returned from obj c ::  ${str}`);
+      }
+    });
+  }
+
+  renderWebView() {
+    return (
+      <WebViewAndroid
+        style={esty.scrll}
+        type={'EMAIL_LOGIN_From JS'}
+        loadUrl={'file:///android_asset/index.html'}
+      />
+    );
+  }
+
+  renderIosWebView() {
+    return (
+      <WebIosView
+        style={{ flex: 8 }}
+      />
+    ); // loginInfo={'{ "login info": "not yet" }'}  isTest={true}
+  }
+
+  renderState() {
+    const { login } = this.state;
+    return (
+      <View style={{ flex: 1, backgroundColor: '#DEF' }} >
+        <Text style={esty.txtx}> Login : {login}</Text>
+
+      </View>
+    );
   }
 
   ////////////////////////////////////////////////////   _//////////////////_   render
   render() {
-    return (<CU.MnSideMenu main={this.renderMain()} />);
+    //return (<CU.MnSideMenu main={this.renderMain()} />);
+    const webVw = Platform.OS === 'ios' ? this.renderIosWebView() : this.renderWebView();
+    return (
+      <View style={{ flex: 10, marginTop: 50 }}>
+        {this.renderState()}
+        {webVw}
+      </View>
+    ); // loginInfo={'{ "login info": "not yet" }'}  isTest={true}
   }
 
   renderMain() {
@@ -66,6 +134,7 @@ class UXdebugMain extends Component {
       rightBttn: { text: '전체동의', txtSty: { fontSize: 12 },
       opt: { margin: 5, textAlign: 'left' } }
     };
+
     return (
         <ScrollView style={esty.scrll} >
           <CU.NavigateView opt={opt}/>
@@ -124,6 +193,9 @@ const esty = EStyleSheet.create({
   titleSty: {
     fontSize: '$fontSzTitle', color: '$navy'
   },
+  andrWeb: {
+    width: '100%', height: '100%'
+  }
 
 });
 

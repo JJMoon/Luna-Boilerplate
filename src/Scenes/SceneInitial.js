@@ -10,7 +10,7 @@
 
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Image, LayoutAnimation,
-  TouchableOpacity, ActivityIndicator } from 'react-native';
+  WebView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -19,6 +19,8 @@ import * as actions from '../rdx-actions';
 import * as C from '../Compo';
 import * as CU from '../CompoUnit';
 import { genFunctionObj, genFunctionOfRef } from '../Util';
+
+const webVwContent = require('../WebviewContent/index.html');;
 
 class SceneInitial extends Component {
   constructor(props) {
@@ -95,10 +97,12 @@ class SceneInitial extends Component {
   renderMain() {
     const { viewCnt } = this.state;
 
+    // {this.getAniView(viewCnt)}
+
     return (
       <View style={esty.mainContainer} >
 
-        <View style={{ flex: 3 }} />
+        <View style={{ flex: 1 }} />
         {/* -------------------------  -------------------------  분리선.. ... */}
         <C.MnButton
           text={'MENU'}
@@ -110,14 +114,21 @@ class SceneInitial extends Component {
         />
 
         <Text ref="rtxt001" style={esty.nameText}> 이름 텍스트 스타일 </Text>
-
-        <View style={{ flex: 20 }} />
-
-        {this.getAniView(viewCnt)}
-
       </View>
     );
   }
+
+  renderWebView() {
+    return (
+      <View style={esty.mainContainer} >
+        <View style={{ flex: 30 }}>
+          <WebView
+            source={webVwContent}
+          />
+        </View>
+      </View>
+    );
+  } // source={{ uri: 'https://github.com/facebook/react-native' }}
 
   render() {
     return (<CU.MnSideMenu main={this.renderMain()} />);
@@ -126,7 +137,7 @@ class SceneInitial extends Component {
 
 const esty = EStyleSheet.create({
   mainContainer: {
-    flex: 100, width: '100%', backgroundColor: '#FFF'
+    flex: 1, width: '100%', backgroundColor: '#FFF'
   },
   topContainer: {
     flex: 1, height: '172 * $scrRt',

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html>
+    <head> HEAD </head>
+    
+    <script type="text/javascript">
+        
+        function myFunction() {
+            document.getElementById("txtt").innerHTML = "This is Experiment ";
+        }
+        function jsAlert() {
+            alert("Hello World")
+        }
+        function changeElement() {
+            document.getElementById("txtt").innerHTML = "Changed by changeElement()";
+        }
+        function sendMessageIOS() {
+            window.location = 'ios:webToNativeCall';
+        }
+        function logout() {
+            window.location = 'ios:logout';
+        }
+        document.addEventListener("experi", myFunction);
+        document.addEventListener("message", function() { document.getElementById("txtt").innerHTML = "Got Message"; });
+    </script>
+    
+    <body onload="execDaumPostcode()">
+        <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0"/>
+        
+        <div>
+            <h1> Title </h1>
+        </div>
+        
+        <text id="txtt"> Initial Text </text>
+        
+        <div>
+            <button onclick="jsAlert()">JS Alert View</button>
+            <button onclick="changeElement()">changeElement</button>
+        </div>
+        
+        <div>
+            <input type='button' style='width:200px;height:30px;' onclick='sendMessageIOS()' value='sendMessageIOS'/>
+        </div>
+        
+        <div>
+            <input type='button' style='width:200px;height:30px;' onclick='logout()' value='Log Out'/>
+        </div>
+    </body>
+</html>
