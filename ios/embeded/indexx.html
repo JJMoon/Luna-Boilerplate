@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+    </head>
+    
+    <script type="text/javascript">
+        document.addEventListener("experi", myFunction);
+        function myFunction() {
+            document.getElementById("txtt").innerHTML = "This is Experiment ";
+        }
+    function sayHello() {
+        alert("Hello World")
+    }
+    function getAppMessage() {
+        alert("Got message from Obj-C")
+    }
+    function over() {
+        document.getElementById("txtt").innerHTML = "Hello World";
+    }
+    
+    function locationChange()
+    {
+        window.location = 'ios:webToNativeCall';
+    }
+    document.addEventListener("message", function() { document.getElementById("txtt").innerHTML = "Got Message"; });
+        </script>
+    
+    <body onload="execDaumPostcode()">
+        <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0"/>
+        
+        <div>
+            <h1> Title </h1>
+        </div>
+        
+        <text id="txtt"> Initial Text </text>
+        
+        <button onclick="sayHello()">Click me</button>
+        
+        <button onclick="over()">write</button>
+        
+        <input type='button' style='width:90px;height:30px;' onclick='locationChange()' value='click me'/>
+            
+        
+    </body>
+</html>
