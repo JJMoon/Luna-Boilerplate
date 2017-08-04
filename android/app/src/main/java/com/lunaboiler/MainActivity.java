@@ -27,7 +27,6 @@ public class MainActivity extends ReactActivity {
     private FragmentManager fragmentMan;
 
     private SimpleWebServer mWebServer;
-    private WebView mWebView;
 
     private ValueCallback<Uri> mUploadMessage;
     private PermissionRequest mPermissionRequest;
