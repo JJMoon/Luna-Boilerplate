@@ -1,6 +1,7 @@
 package com.lunaboiler;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -100,6 +101,7 @@ public class MainActivity extends ReactActivity {
             Toast.makeText(MainActivity.this, "Camera not supported", Toast.LENGTH_LONG).show();
         }
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode,
