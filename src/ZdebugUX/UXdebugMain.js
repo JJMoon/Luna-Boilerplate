@@ -10,7 +10,7 @@
 
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, PixelRatio, LayoutAnimation, Platform, requireNativeComponent,
-  AsyncStorage, NativeModules,
+  AsyncStorage, NativeModules, PermissionsAndroid,
   TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { Button, SideMenu } from 'react-native-elements';
@@ -55,6 +55,8 @@ class UXdebugMain extends Component {
 
   componentWillMount() {
     console.log('\n ====== ====== ====== ======  [[ UXdebugMain :: componentWillMount ]]');
+
+
   }
 
   componentWillUnmount() {
@@ -62,6 +64,12 @@ class UXdebugMain extends Component {
   }
 
   async componentDidMount() {
+
+    if (Platform.OS !== 'ios') {
+      this.requestCameraPermission();
+    }
+
+
     await AsyncStorage.setItem('theKey', 'this is from RN ');
 
     // RCT_EXPORT_METHOD(setLogoutCallback:(RCTResponseSenderBlock)callback) {
@@ -73,6 +81,25 @@ class UXdebugMain extends Component {
         console.log(`  returned from obj c ::  ${str}`);
       }
     });
+  }
+
+  async requestCameraPermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          'title': 'Cool Photo App Camera Permission',
+          'message': 'Cool Photo App needs access to your camera ' +
+                     'so you can take awesome pictures.'
+        });
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("You can use the camera");
+      } else {
+        console.log("Camera permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    }
   }
 
   loginAction() {
@@ -87,7 +114,7 @@ class UXdebugMain extends Component {
     this.setState({ login: ' ios logged in ' });
   }
 
-  renderWebView() {
+  renderAndroidWebView() {
     return (
       <WebViewAndroid
         style={esty.scrll}
@@ -107,12 +134,16 @@ class UXdebugMain extends Component {
 
   renderState() {
     const { login } = this.state;
+
+    const bttn = Platform.OS === 'ios' ?
+      { txt: ' Log in ', action: this.loginAction.bind(this) }  :
+      { txt: ' Permission ', action: this.requestCameraPermission.bind(this) };
     return (
       <View style={{ flex: 1, backgroundColor: '#DEF' }} >
         <Text style={esty.txtx}> Login : {login}</Text>
         <C.MnButton
-          text={'.. Log In ..'}
-          onPressCallback={this.loginAction.bind(this)}
+          text={bttn.txt}
+          onPressCallback={bttn.action}
         />
       </View>
     );
@@ -121,7 +152,8 @@ class UXdebugMain extends Component {
   ////////////////////////////////////////////////////   _//////////////////_   render
   render() {
     //return (<CU.MnSideMenu main={this.renderMain()} />);
-    const webVw = Platform.OS === 'ios' ? this.renderIosWebView() : this.renderWebView();
+    const webVw = Platform.OS === 'ios' ?
+      this.renderIosWebView() : this.renderAndroidWebView();
     return (
       <View style={{ flex: 10, marginTop: 50 }}>
         {this.renderState()}

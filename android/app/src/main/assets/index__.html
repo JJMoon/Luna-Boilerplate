@@ -19,6 +19,14 @@
             document.getElementById("txtt").innerHTML = "Hello World";
         }
 
+        function mediaRequest() {
+            navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+
+            }).catch(function(err) {
+
+            });
+        }
+
         function showAndroidToast(toast) {
             Android.showToast(toast);
         }
@@ -55,6 +63,8 @@
         <button onclick="sayHello()">Click me</button>
         
         <button onclick="over()">write</button>
+
+        <button onclick="mediaRequest()">mediaRequest</button>
         
     </body>
 

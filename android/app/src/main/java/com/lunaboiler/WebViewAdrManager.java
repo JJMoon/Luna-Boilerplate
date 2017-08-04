@@ -111,6 +111,15 @@ public class WebViewAdrManager extends SimpleViewManager<WebView> {
 //        = PackageManager.PERMISSION_GRANTED;
 
         mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setAllowContentAccess(true);
+        mWebView.getSettings().setAllowFileAccess(true);
+        mWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
+        mWebView.getSettings().setAllowFileAccessFromFileURLs(true);
+        mWebView.getSettings().setNeedInitialFocus(true);
+        mWebView.getSettings().setAppCacheEnabled(true);
+        mWebView.getSettings().setBlockNetworkImage(false);
+        mWebView.getSettings().setBlockNetworkLoads(false);
+        mWebView.getSettings().setDomStorageEnabled(true);
 
         //mWebView.loadUrl("file:///android_asset/index__.html");
         mWebView.loadUrl("http://localhost:" + port + "/index__.html");
@@ -120,16 +129,6 @@ public class WebViewAdrManager extends SimpleViewManager<WebView> {
 
         //WebView myWeb = new WebView(reactContext);
 
-//        myWeb.getSettings().setJavaScriptEnabled(true);
-//        myWeb.setWebViewClient(new WebViewClient());
-//        myWeb.getSettings().setAllowFileAccess(true);
-//        myWeb.getSettings().setAllowContentAccess(true);
-//        myWeb.getSettings().setAllowFileAccessFromFileURLs(true);
-//        myWeb.getSettings().setNeedInitialFocus(true);
-//        myWeb.getSettings().setAppCacheEnabled(true);
-//        myWeb.getSettings().setBlockNetworkImage(false);
-//        myWeb.getSettings().setBlockNetworkLoads(false);
-//        myWeb.getSettings().setDomStorageEnabled(true);
 
 //        myWeb.setWebChromeClient(new WebChromeClient() {
 //            @Override

@@ -34,6 +34,8 @@ public class MainActivity extends ReactActivity {
         super.onCreate(savedInstanceState);
 
         Inst = this; // singletone
+
+        permissionProcess();
     }
 
         /**
