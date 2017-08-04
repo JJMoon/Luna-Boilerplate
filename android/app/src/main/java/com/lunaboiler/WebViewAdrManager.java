@@ -50,12 +50,9 @@ import java.util.Date;
 
 public class WebViewAdrManager extends SimpleViewManager<WebView> {
 
+    private final String TAG = "WebViewAdrManager";
     private static final String TYPE_IMAGE = "image/*";
-    private static final int INPUT_FILE_REQUEST_CODE = 1;
 
-    private ValueCallback<Uri> mUploadMessage;
-    private ValueCallback<Uri[]> mFilePathCallback;
-    private String mCameraPhotoPath;
 
     private SimpleWebServer mWebServer;
     private WebView mWebView;
@@ -64,6 +61,19 @@ public class WebViewAdrManager extends SimpleViewManager<WebView> {
 
     public static final String REACT_CLASS = "WebViewAdr";
 
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File imageFile = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        return imageFile;
+    }
 
     @Override
     public String getName() {
@@ -73,9 +83,6 @@ public class WebViewAdrManager extends SimpleViewManager<WebView> {
     @Override
     protected WebView createViewInstance(ThemedReactContext reactContext) {
 
-
-
-
         final int port = 8080;
         mWebServer = new SimpleWebServer(port, MainActivity.Inst.getResources().getAssets());
         mWebServer.start();
@@ -84,7 +91,58 @@ public class WebViewAdrManager extends SimpleViewManager<WebView> {
 
         mWebView = new WebView(reactContext);
 
-        mWebView.setWebViewClient(new WebViewClient() {
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            // For Android 5.1
+            public boolean onShowFileChooser(
+                    WebView webView, ValueCallback<Uri[]> filePathCallback,
+                    WebChromeClient.FileChooserParams fileChooserParams) {
+                if(MainActivity.mFilePathCallback != null) {
+                    MainActivity.mFilePathCallback.onReceiveValue(null);
+                }
+                MainActivity.mFilePathCallback = filePathCallback;
+
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(MainActivity.Inst.getPackageManager()) != null) {
+                    // Create the File where the photo should go
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                        takePictureIntent.putExtra("PhotoPath", MainActivity.mCameraPhotoPath);
+                    } catch (IOException ex) {
+                        // Error occurred while creating the File
+                        Log.e(TAG, "Unable to create Image File", ex);
+                    }
+
+                    // Continue only if the File was successfully created
+                    if (photoFile != null) {
+                        MainActivity.mCameraPhotoPath = "file:" + photoFile.getAbsolutePath();
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                                Uri.fromFile(photoFile));
+                    } else {
+                        takePictureIntent = null;
+                    }
+                }
+
+                Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                contentSelectionIntent.setType("image/*");
+
+                Intent[] intentArray;
+                if(takePictureIntent != null) {
+                    intentArray = new Intent[]{takePictureIntent};
+                } else {
+                    intentArray = new Intent[0];
+                }
+
+                Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+                chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+                chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+
+                MainActivity.Inst.startActivityForResult(chooserIntent, MainActivity.FILECHOOSER_RESULTCODE);
+
+                return true;
+            }
 
             public void onPageFinished(WebView view, String url) {
                 Toast.makeText(MainActivity.Inst, "Web View : onPageFinished", Toast.LENGTH_SHORT).show();
@@ -98,6 +156,7 @@ public class WebViewAdrManager extends SimpleViewManager<WebView> {
                     mWebView.loadUrl(msg);
                 }
             }
+
         });
 
 

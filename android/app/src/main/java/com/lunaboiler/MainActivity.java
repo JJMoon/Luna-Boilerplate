@@ -1,13 +1,17 @@
 package com.lunaboiler;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.webkit.PermissionRequest;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.Toast;
 
@@ -17,17 +21,21 @@ import com.permissionrequest.SimpleWebServer;
 public class MainActivity extends ReactActivity {
 
     public static MainActivity Inst;
+    public static String mCameraPhotoPath;
 
     private FragmentManager fragmentMan;
 
     private SimpleWebServer mWebServer;
     private WebView mWebView;
 
+    private ValueCallback<Uri> mUploadMessage;
     private PermissionRequest mPermissionRequest;
 
     private final static int PERMISSIONS_REQUEST_CODE = 100;
-    private static final int REQUEST_CAMERA = 0;
-    private static final int REQUEST_CAMERA_PERMISSION = 1;
+    public final static int FILECHOOSER_RESULTCODE=1;
+    public static ValueCallback<Uri[]> mFilePathCallback = null;
+    // private static final int REQUEST_CAMERA = 0;
+    // private static final int REQUEST_CAMERA_PERMISSION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +98,38 @@ public class MainActivity extends ReactActivity {
             }
         } else {
             Toast.makeText(MainActivity.this, "Camera not supported", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                    Intent intent) {
+        if (requestCode==FILECHOOSER_RESULTCODE) {
+            if(mFilePathCallback == null) {
+                super.onActivityResult(requestCode, resultCode, intent);
+                return;
+            }
+
+            Uri[] results = null;
+
+            // Check that the response is a good one
+            if(resultCode == Activity.RESULT_OK) {
+                if(intent == null) {
+                    // If there is not data, then we may have taken a photo
+                    if(mCameraPhotoPath != null) {
+                        results = new Uri[]{Uri.parse(mCameraPhotoPath)};
+                    }
+                } else {
+                    String dataString = intent.getDataString();
+                    if (dataString != null) {
+                        results = new Uri[]{Uri.parse(dataString)};
+                    }
+                }
+            }
+
+            mFilePathCallback.onReceiveValue(results);
+            mFilePathCallback = null;
+            return;
         }
     }
 }
