@@ -65,7 +65,14 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   }
   
   
-  [self performSelectorOnMainThread:@selector(login:) withObject:jStr waitUntilDone:NO];
+  
+  
+  NSString *objJson = @"{ \"type\": \"EMAIL_LOGIN\", \"data\": { \"email\": \"hyochan.test@themoin.com\", \"password\": \"password12\" } }";
+  NSString *capsuled = [NSString stringWithFormat:@"{ \"data\" : %@ }", objJson];
+  
+  //[self login:capsuled];
+  
+  [self performSelectorOnMainThread:@selector(login:) withObject:capsuled waitUntilDone:NO];
   
   
   NSLog(@"   login info : %@,   dic : %@     type : %@", jStr, jDic, authType);
@@ -75,7 +82,7 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
 
 - (UIView *)view {
   UIWebView *theWeb = [[UIWebView alloc] init];
-  NSString *filePath=[[NSBundle mainBundle]pathForResource:@"indexx" ofType:@"html" inDirectory:@"embeded"];
+  NSString *filePath=[[NSBundle mainBundle]pathForResource:@"index" ofType:@"html" inDirectory:@"embeded"];
   NSLog(@"\n\n IOS Webview index.html ::  %@  \n\n",filePath);
   NSString *htmlstring=[NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
   [theWeb loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:filePath]]];
@@ -120,8 +127,8 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
 }
 
 - (void)login:(NSString *)auth {
-  NSString *loginStr = [NSString stringWithFormat:@"login(%@);", auth];  // login
-  NSLog(@"  %@", loginStr);
+  NSString *loginStr = [NSString stringWithFormat:@"getAppMessage(%@);", auth];  // login getAppMessage
+  NSLog(@"\n\n\n Log In ::  %@   \n\n\n", loginStr);
   [webVw stringByEvaluatingJavaScriptFromString:loginStr];
 }
 
@@ -197,15 +204,10 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   //[webView stringByEvaluatingJavaScriptFromString:@"document.getElementById(\"txtt\").innerHTML = \"Direct Change\";"];
   
   //  window.postMessage('{\"method\":\"play\"}'
-  NSString *objJson = @"'{ \"type\": \"EMAIL_LOGIN\", \"data\": { \"email\": \"hyochan.test@themoin.com\", \"password\": \"password12\" } }'";
+  NSString *objJson = @"{ \"type\": \"EMAIL_LOGIN\", \"data\": { \"email\": \"hyochan.test@themoin.com\", \"password\": \"password12\" } }";
+  NSString *capsuled = [NSString stringWithFormat:@"{ \"data\" : %@ }", objJson];
   
-  NSString *js = [NSString stringWithFormat:@"document.postMessage(%@);", objJson];
-  
-  [webView stringByEvaluatingJavaScriptFromString:js];
-  
-  // document.getElementById("txtt").innerHTML = "Hello World";
-  
-  //NSLog(@"  check isTest %d", isTest);
+  //[self login:capsuled];
   
   
   NSLog(@"\n\n\n\n   postMessage finished  ");
