@@ -43,6 +43,12 @@
             <button onclick="changeElement()">changeElement</button>
         </div>
         
+        <div className='moin-btn-file'>
+            사진 등록하기
+            <input type='file' accept='image/*'
+                onChange={ (e)=> alert(e) } />
+        </div>
+        
         <div>
             <input type='button' style='width:200px;height:30px;' onclick='sendMessageIOS()' value='sendMessageIOS'/>
         </div>
