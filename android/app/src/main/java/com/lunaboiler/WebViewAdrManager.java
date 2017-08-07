@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.webkit.JavascriptInterface;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -61,6 +62,8 @@ public class WebViewAdrManager extends SimpleViewManager<WebView> {
     public String getName() {
         return REACT_CLASS;
     }
+
+
 
     @Override
     protected WebView createViewInstance(ThemedReactContext reactContext) {
@@ -124,32 +127,40 @@ public class WebViewAdrManager extends SimpleViewManager<WebView> {
                 return true;
             }
 
-            public void onPageFinished(WebView view, String url) {
-                Toast.makeText(MainActivity.Inst, "Web View : onPageFinished", Toast.LENGTH_SHORT).show();
+        });
 
-                String jsn = "'{ \"type\": \"EMAIL_LOGIN\", \"data\": { \"email\": \"hyochan.test@themoin.com\", \"password\": \"password12\" } }'";
-                String msg = "document.postMessage(" + jsn + ");";
+
+        mWebView.setWebViewClient(new WebViewClient() {
+            public void onPageFinished(WebView view, String url) {
+                String jsn = "{ \"type\": \"EMAIL_LOGIN\", \"data\": { \"email\": \"hyochan.test@themoin.com\", \"password\": \"password12\" } }";
+
+                //final String msg = "document.postMessage(" + jsn + ");";
+                final String msg = "javascript:getAppMessage(" + jsn + ");";  // { "\"data\" : %@ }"
+                //final String msg = "javascript:showAlert()"; // javascript
 
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                    mWebView.evaluateJavascript(msg, null);
+                    mWebView.evaluateJavascript(msg, null); // evaluateJavascript
+
+//                    runOnUiThread(new Runnable()
+//                    {
+//                        public void run()
+//                        {
+//                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+//                                //Toast.makeText(MainActivity.Inst, "onPageFinished > KitKat", Toast.LENGTH_SHORT).show();
+//                                mWebView.evaluateJavascript(msg, null); // evaluateJavascript
+//                            }
+//                        }
+//                    });
                 } else {
                     mWebView.loadUrl(msg);
                 }
             }
-
         });
 
 
 
-        mWebView.addJavascriptInterface(new RNWebViewInterface(MainActivity.Inst), "Android");
+        mWebView.addJavascriptInterface(new RNWebViewInterface(MainActivity.Inst), "JSInterface");
         mWebView.getSettings().setUserAgentString("Mozilla/5.0 (Linux; U;` Android 2.0; en-us; Droid Build/ESD20) AppleWebKit/530.17 (KHTML, like Gecko) Version/4.0 Mobile Safari/530.17");
-
-//
-//        MainActivity.Inst.enforcePermission(Manifest.permission.CAMERA, );
-//                new String[]{PermissionRequest.RESOURCE_VIDEO_CAPTURE}));
-//
-//        = PackageManager.PERMISSION_GRANTED;
-
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setAllowContentAccess(true);
         mWebView.getSettings().setAllowFileAccess(true);
@@ -160,33 +171,11 @@ public class WebViewAdrManager extends SimpleViewManager<WebView> {
         mWebView.getSettings().setBlockNetworkImage(false);
         mWebView.getSettings().setBlockNetworkLoads(false);
 
-        mWebView.loadUrl("https://devfront.themoin.com");
+        mWebView.loadUrl("file:///android_asset/index.html"); // "https://devfront.themoin.com"
+
         mWebView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         return mWebView;
     }
-
-//    private void requestCameraPermission() {
-//        if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-//            MessageDialogFragment.newInstance(R.string.permission_message)
-//                    .show(getChildFragmentManager(), FRAGMENT_DIALOG);
-//        } else {
-//            requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
-//        }
-//    }
-
-//    public void onReceiveNativeEvent(final ThemedReactContext reactContext, final MaterialCalendarView materialCalendarView) {
-//        materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
-//            @Override
-//            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-//                WritableMap event = Arguments.createMap();
-//                event.putString("date", date.getDate().toString());
-//                event.putInt("day", date.getDay());
-//                event.putInt("month", date.getMonth());
-//                event.putInt("year", date.getYear());
-//                reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(materialCalendarView.getId(), "topChange", event);
-//            }
-//        });
-//    }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void setUpWebViewDefaults(WebView webView) {

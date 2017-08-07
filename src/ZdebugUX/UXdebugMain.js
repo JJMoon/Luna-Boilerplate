@@ -65,22 +65,22 @@ class UXdebugMain extends Component {
 
   async componentDidMount() {
 
-    if (Platform.OS !== 'ios') {
+    if (Platform.OS === 'ios') {
+      iosNativeModule.setLogoutCallback((error, str) => {
+        if (error) {
+          console.error(error);
+        } else {
+          this.setState({ login: 'ios logOut' });
+          console.log(`  returned from obj c ::  ${str}`);
+        }
+      });
+    } else {
       this.requestCameraPermission();
     }
-
 
     await AsyncStorage.setItem('theKey', 'this is from RN ');
 
     // RCT_EXPORT_METHOD(setLogoutCallback:(RCTResponseSenderBlock)callback) {
-    iosNativeModule.setLogoutCallback((error, str) => {
-      if (error) {
-        console.error(error);
-      } else {
-        this.setState({ login: 'ios logOut' });
-        console.log(`  returned from obj c ::  ${str}`);
-      }
-    });
   }
 
   async requestCameraPermission() {

@@ -94,10 +94,10 @@ public class MainActivity extends ReactActivity {
                             PERMISSIONS_REQUEST_CODE);
                 }
             } else {
-                Toast.makeText(MainActivity.this, "M 하위 버전임", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "M 하위 버전임", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(MainActivity.this, "Camera not supported", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Camera not supported", Toast.LENGTH_LONG).show();
         }
     }
 

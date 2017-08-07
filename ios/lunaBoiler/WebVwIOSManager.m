@@ -35,7 +35,7 @@
 UIWebView *webVw;
 int cnt = 0;
 
-BOOL isTest;
+BOOL isTest, loginNotYet;
 
 RCT_EXPORT_MODULE();
 
@@ -50,7 +50,6 @@ RCT_EXPORT_METHOD(setLogoutCallback:(RCTResponseSenderBlock)callback) {
 // Login Info.
 RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   RCTLogInfo(@"\n\n\n\n Obj c >> ReactIosAuth :: loginInfo \n\n .");
-  
   NSError *jsonError;
   NSData *objectData = [jStr dataUsingEncoding:NSUTF8StringEncoding];
   NSDictionary *jDic = [NSJSONSerialization JSONObjectWithData:objectData
@@ -64,16 +63,9 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
     return;
   }
   
-  
-  
-  
   NSString *objJson = @"{ \"type\": \"EMAIL_LOGIN\", \"data\": { \"email\": \"hyochan.test@themoin.com\", \"password\": \"password12\" } }";
-  NSString *capsuled = [NSString stringWithFormat:@"{ \"data\" : %@ }", objJson];
-  
-  //[self login:capsuled];
-  
-  [self performSelectorOnMainThread:@selector(login:) withObject:capsuled waitUntilDone:NO];
-  
+  //NSString *capsuled = [NSString stringWithFormat:@"{ \"data\" : %@ }", objJson];
+  [self performSelectorOnMainThread:@selector(login:) withObject:objJson waitUntilDone:NO];
   
   NSLog(@"   login info : %@,   dic : %@     type : %@", jStr, jDic, authType);
   NSUserDefaults *defls = [NSUserDefaults standardUserDefaults];
@@ -89,19 +81,9 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   // or [theWeb loadHTMLString:htmlstring baseURL:nil];
   
   theWeb.delegate = self;
-  
-  NSString *inject22 =
-  @"(function() { var originalPostMessage = window.postMessage; var patchedPostMessage = function(message, targetOrigin, transfer) { originalPostMessage(message, targetOrigin, transfer); }; patchedPostMessage.toString = function() { return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage'); }; window.postMessage = patchedPostMessage;})()";
-  
-  // NSString *inject = @"(function() { var originalPostMessage = window.postMessage; })()";
-  
-  // [theWeb stringByEvaluatingJavaScriptFromString:inject];
-  
-  NSString *jsCont = [[NSBundle mainBundle] pathForResource:inject22 ofType:@"js"];
-  //NSString *js = [NSString stringWithContentsOfFile:jsPath encoding:NSUTF8StringEncoding error:NULL];  파일일 경우.
-  [theWeb stringByEvaluatingJavaScriptFromString:jsCont];
-  
   webVw = theWeb;
+  loginNotYet = true;
+  [NSHTTPCookieStorage sharedHTTPCookieStorage].cookieAcceptPolicy = NSHTTPCookieAcceptPolicyAlways;
   
   return theWeb;
 }
@@ -128,11 +110,15 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
 
 - (void)login:(NSString *)auth {
   NSString *loginStr = [NSString stringWithFormat:@"getAppMessage(%@);", auth];  // login getAppMessage
+  // NSString *loginStr = @"showAlert();"; // java script test
+  
   NSLog(@"\n\n\n Log In ::  %@   \n\n\n", loginStr);
   [webVw stringByEvaluatingJavaScriptFromString:loginStr];
 }
 
 - (void)logOut {
+  loginNotYet = true;
+  
   if (logoutCB == nil) {
     NSLog(@"\n\n\n logoutCB == nil \n\n\n");
   } else {
@@ -160,6 +146,14 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
 //    [webVw stringByEvaluatingJavaScriptFromString:loginStr];
   }
   
+  
+  if (loginNotYet) {
+    
+    NSString *objJson = @"{ \"type\": \"EMAIL_LOGIN\", \"data\": { \"email\": \"hyochan.test@themoin.com\", \"password\": \"password12\" } }";
+    //NSString *capsuled = [NSString stringWithFormat:@"{ \"data\" : %@ }", objJson];
+    [self performSelectorOnMainThread:@selector(login:) withObject:objJson waitUntilDone:NO];
+    loginNotYet = false;
+  }
   
   
 
