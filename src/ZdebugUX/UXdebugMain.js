@@ -57,10 +57,36 @@ class UXdebugMain extends Component {
     console.log('\n ====== ====== ====== ======  [[ UXdebugMain :: componentWillMount ]]');
 
 
+
   }
 
   componentWillUnmount() {
     console.log('\n\n\n\n\n ====== ====== ====== ======  [[ UXdebugMain :: unmount ]] ...\n');
+  }
+
+
+  naverMoinLogin(token) {
+    const SERVER_URL = 'https://devapi.themoin.com';
+    const NAVER_MOIN_LOGIN_API = SERVER_URL + '/a/v1/member/naver/mobile';
+    return fetch(NAVER_MOIN_LOGIN_API, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        authorization: token,
+      }
+    })
+    //.then((response) => response.json())
+    .then((response) => response.text())
+    .then((responseJson) => {
+
+      console.log(responseJson);
+
+      return responseJson;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   }
 
   async componentDidMount() {
@@ -77,6 +103,11 @@ class UXdebugMain extends Component {
     } else {
       this.requestCameraPermission();
     }
+
+    console.log(' Naver Moin Login ');
+    response = await this.naverMoinLogin("AAAAOkmKc+bGeJhtc4+PvSsXLAuJnnVPaPU+UmmM2AYuc2GdpZ0B4mqCmGcPxnVn5UGxOkafFHlRjL4GEauNZSUg43Y=");
+
+    console.log(response);
 
     await AsyncStorage.setItem('theKey', 'this is from RN ');
 
@@ -154,9 +185,9 @@ class UXdebugMain extends Component {
     //return (<CU.MnSideMenu main={this.renderMain()} />);
     const webVw = Platform.OS === 'ios' ?
       this.renderIosWebView() : this.renderAndroidWebView();
-    return (
-      <View style={{ flex: 10, marginTop: 50 }}>
-        {this.renderState()}
+    return ( //{this.renderState()}
+      <View style={{ flex: 10 }}>
+
         {webVw}
       </View>
     ); // loginInfo={'{ "login info": "not yet" }'}  isTest={true}

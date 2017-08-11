@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
@@ -55,6 +57,9 @@ public class WebViewAdrManager extends SimpleViewManager<WebView> {
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
+
+        Log.d("JAVA", "the string :: " + imageFileName + "  dir : " + storageDir);
+
         return imageFile;
     }
 
@@ -74,7 +79,26 @@ public class WebViewAdrManager extends SimpleViewManager<WebView> {
 
         setUpWebViewDefaults(mWebView);
 
+        // Enables Cookies
+        CookieManager.getInstance().setAcceptCookie(true);
+
         mWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onCreateWindow(WebView view, boolean dialog, boolean userGesture, Message resultMsg) {
+                final WebSettings settings = view.getSettings();
+                settings.setDomStorageEnabled(true);
+                settings.setJavaScriptEnabled(true);
+                settings.setAllowFileAccess(true);
+                settings.setAllowContentAccess(true);
+                view.setWebChromeClient(this);
+                WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;
+                transport.setWebView(view);
+                resultMsg.sendToTarget();
+                return false;
+            }
+
+
+
             // For Android 5.1
             public boolean onShowFileChooser(
                     WebView webView, ValueCallback<Uri[]> filePathCallback,
@@ -127,8 +151,26 @@ public class WebViewAdrManager extends SimpleViewManager<WebView> {
                 return true;
             }
 
-        });
+            //For Android 4.1 only
+            protected void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture)
+            {
+                MainActivity.Inst.mUploadMessage = uploadMsg;
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("image/*");
+                MainActivity.Inst.startActivityForResult(Intent.createChooser(intent, "File Browser"), MainActivity.FILECHOOSER_RESULTCODE);
+            }
 
+            protected void openFileChooser(ValueCallback<Uri> uploadMsg)
+            {
+                MainActivity.Inst.mUploadMessage = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("image/*");
+                MainActivity.Inst.startActivityForResult(Intent.createChooser(i, "File Chooser"), MainActivity.FILECHOOSER_RESULTCODE);
+            }
+
+        });
 
         mWebView.setWebViewClient(new WebViewClient() {
             public void onPageFinished(WebView view, String url) {
@@ -157,21 +199,11 @@ public class WebViewAdrManager extends SimpleViewManager<WebView> {
             }
         });
 
-
-
         mWebView.addJavascriptInterface(new RNWebViewInterface(MainActivity.Inst), "JSInterface");
-        mWebView.getSettings().setUserAgentString("Mozilla/5.0 (Linux; U;` Android 2.0; en-us; Droid Build/ESD20) AppleWebKit/530.17 (KHTML, like Gecko) Version/4.0 Mobile Safari/530.17");
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setAllowContentAccess(true);
-        mWebView.getSettings().setAllowFileAccess(true);
-        mWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
-        mWebView.getSettings().setAllowFileAccessFromFileURLs(true);
-        mWebView.getSettings().setNeedInitialFocus(true);
-        mWebView.getSettings().setAppCacheEnabled(true);
-        mWebView.getSettings().setBlockNetworkImage(false);
-        mWebView.getSettings().setBlockNetworkLoads(false);
 
-        mWebView.loadUrl("file:///android_asset/index.html"); // "https://devfront.themoin.com"
+        mWebView.loadUrl("file:///android_asset/index.html");
+//        mWebView.loadUrl("file:///android_asset/_indexTest.html");
+//        mWebView.loadUrl("https://devfront.themoin.com");
 
         mWebView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         return mWebView;

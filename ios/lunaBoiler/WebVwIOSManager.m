@@ -73,7 +73,11 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
 }
 
 - (UIView *)view {
-  UIWebView *theWeb = [[UIWebView alloc] init];
+  //UIWebView *theWeb = [[UIWebView alloc] init];
+  CGRect rect = CGRectMake(0, 200, 300, 500);
+  UIWebView *theWeb = [[UIWebView alloc] initWithFrame:rect];
+  
+  
   NSString *filePath=[[NSBundle mainBundle]pathForResource:@"index" ofType:@"html" inDirectory:@"embeded"];
   NSLog(@"\n\n IOS Webview index.html ::  %@  \n\n",filePath);
   NSString *htmlstring=[NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
@@ -88,8 +92,34 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   return theWeb;
 }
 
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(nonnull NSError *)error {
+  NSLog(@"  failed ..  ");
+}
+
+- (void)webView:(UIWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(nonnull NSError *)error {
+  NSLog(@"  provisional ");
+}
+
+
+// <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
+// <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+
+
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
  navigationType:(UIWebViewNavigationType)navigationType {
+  
+  if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+    NSLog(@"  UIWebViewNavigationTypeLinkClicked  ");
+    //Allows for twitter links
+    //[self.mainWebView loadRequest:request];
+    return NO;
+  }
+  
+  if ([request.URL.absoluteString isEqualToString:@"about:blank"]) {
+    NSLog(@"  about : blank ");
+    return YES;
+  }
+  
   NSString *msg = [[request URL] absoluteString];
   NSLog(@"   Message from web : %@", msg);
   
@@ -150,6 +180,8 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   if (loginNotYet) {
     
     NSString *objJson = @"{ \"type\": \"EMAIL_LOGIN\", \"data\": { \"email\": \"hyochan.test@themoin.com\", \"password\": \"password12\" } }";
+    //NSString *objJson = @"{\"type\":\"NAVER_LOGIN\",\"data\":{\"token\":\"AAAAOkmKc+bGeJhtc4+PvSsXLAuJnnVPaPU+UmmM2AYuc2GdpZ0B4mqCmGcPxnVn5UGxOkafFHlRjL4GEauNZSUg43Y=\"}}";
+    
     //NSString *capsuled = [NSString stringWithFormat:@"{ \"data\" : %@ }", objJson];
     [self performSelectorOnMainThread:@selector(login:) withObject:objJson waitUntilDone:NO];
     loginNotYet = false;

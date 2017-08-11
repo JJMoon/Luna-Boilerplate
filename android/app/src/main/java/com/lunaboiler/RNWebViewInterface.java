@@ -26,7 +26,8 @@ public class RNWebViewInterface {
 
     /** Log Out from the web page */
     @JavascriptInterface
-    public void logout() {
-        Toast.makeText(mContext, "log out", Toast.LENGTH_SHORT).show();
+    public void logout(String ttt) {
+        Log.d("JAVA", " Received :: " + ttt);
+        Toast.makeText(mContext, ttt, Toast.LENGTH_SHORT).show();
     }
 }

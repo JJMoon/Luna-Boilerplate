@@ -6,12 +6,28 @@
         HEAD
     </head>
     
+    <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
+    
     <script type="text/javascript">
-        function myFunction() {
-            document.getElementById("txtt").innerHTML = "This is Experiment ";
+    function popupDaum() {
+        new daum.Postcode({ oncomplete: function(data) { } }).open();
+    }
+
+
+    function myFunction() {
+        document.getElementById("txtt").innerHTML = "This is Experiment ";
+    }
+    
+    function dodgeBlank() {
+        links = document.getElementsByTagName('a');
+        for (i=0; i<links.length; i++)
+        {
+            links[i].target='_self';
         }
+    }
     function jsAlert() {
         alert("Hello World")
+        console.log(' console.log :: jsAlert');
     }
     function changeElement() {
         document.getElementById("txtt").innerHTML = "Changed by changeElement()";
@@ -27,8 +43,11 @@
     function logout() {
         window.location = 'ios:logout';
     }
-    document.addEventListener("experi", myFunction);
-    document.addEventListener("message", function() { document.getElementById("txtt").innerHTML = "Got Message"; });
+    function windowOpen() {
+        window.open("https://www.w3schools.com");
+    }
+    //document.addEventListener("experi", myFunction);
+    //document.addEventListener("message", function() { document.getElementById("txtt").innerHTML = "Got Message"; });
         </script>
     
     <body onload="execDaumPostcode()">
@@ -46,6 +65,10 @@
             <button onclick="changeElement()">changeElement</button>
         </div>
         
+        <div>
+            <button onclick="popupDaum()"> daum post code </button>
+        </div>
+        
         <div className='moin-btn-file'>
             사진 등록하기
             <input type='file' accept='image/*' />
@@ -53,6 +76,10 @@
         
         <div>
             <input type='button' style='width:200px;height:30px;' onclick='sendMessageIOS()' value='sendMessageIOS'/>
+        </div>
+        
+        <div>
+            <input type='button' style='width:200px;height:30px;' onclick='dodgeBlank()' value='dodgeBlank'/>
         </div>
         
         <div>
