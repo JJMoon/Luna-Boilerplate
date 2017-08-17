@@ -24,8 +24,8 @@ class App extends Component {
       <Provider store={createStore(reducers)}>
         <Router>
           <Scene key="root">
-            <Scene key="sceneInitial" component={SceneInitial} title="Initial"   hideNavBar />
-            <Scene key="debugMainUX" component={UXdebugMain} title="Ux Test" initial hideNavBar />
+            <Scene key="sceneInitial" component={SceneInitial} title="Initial" initial hideNavBar />
+            <Scene key="debugMainUX" component={UXdebugMain} title="Ux Test" hideNavBar />
             <Scene key="authEmailInput" component={SceneEmailInput} title="Email Input"  hideNavBar />
           </Scene>
         </Router>

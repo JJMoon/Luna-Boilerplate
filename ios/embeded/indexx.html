@@ -1,28 +1,54 @@
 <!DOCTYPE html>
 
 <html>
-    <head> HEAD </head>
+    <head>
+        <meta charset="utf-8">
+        HEAD
+    </head>
+    
+    <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
     
     <script type="text/javascript">
-        
-        function myFunction() {
-            document.getElementById("txtt").innerHTML = "This is Experiment ";
+    function popupDaum() {
+        new daum.Postcode({ oncomplete: function(data) { } }).open();
+    }
+
+
+    function myFunction() {
+        document.getElementById("txtt").innerHTML = "This is Experiment ";
+    }
+    
+    function dodgeBlank() {
+        links = document.getElementsByTagName('a');
+        for (i=0; i<links.length; i++)
+        {
+            links[i].target='_self';
         }
-        function jsAlert() {
-            alert("Hello World")
-        }
-        function changeElement() {
-            document.getElementById("txtt").innerHTML = "Changed by changeElement()";
-        }
-        function sendMessageIOS() {
-            window.location = 'ios:webToNativeCall';
-        }
-        function logout() {
-            window.location = 'ios:logout';
-        }
-        document.addEventListener("experi", myFunction);
-        document.addEventListener("message", function() { document.getElementById("txtt").innerHTML = "Got Message"; });
-    </script>
+    }
+    function jsAlert() {
+        alert("Hello World")
+        console.log(' console.log :: jsAlert');
+    }
+    function changeElement() {
+        document.getElementById("txtt").innerHTML = "Changed by changeElement()";
+    }
+    function sendMessageIOS() {
+        window.location = 'ios:webToNativeCall';
+    }
+    function login(str) {
+        console.log(str.type + "  >>>   " + str.data);
+        document.getElementById("txtt").innerHTML = "Login : " + str.type;
+        document.getElementById("dataTxt").innerHTML = " " + str.data.email + " , " + str.data.password;
+    }
+    function logout() {
+        window.location = 'ios:logout';
+    }
+    function windowOpen() {
+        window.open("https://www.w3schools.com");
+    }
+    //document.addEventListener("experi", myFunction);
+    //document.addEventListener("message", function() { document.getElementById("txtt").innerHTML = "Got Message"; });
+        </script>
     
     <body onload="execDaumPostcode()">
         <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0"/>
@@ -32,6 +58,7 @@
         </div>
         
         <text id="txtt"> Initial Text </text>
+        <text id="dataTxt"> Initial dataTxt </text>
         
         <div>
             <button onclick="jsAlert()">JS Alert View</button>
@@ -39,7 +66,20 @@
         </div>
         
         <div>
+            <button onclick="popupDaum()"> daum post code </button>
+        </div>
+        
+        <div className='moin-btn-file'>
+            사진 등록하기
+            <input type='file' accept='image/*' />
+        </div>
+        
+        <div>
             <input type='button' style='width:200px;height:30px;' onclick='sendMessageIOS()' value='sendMessageIOS'/>
+        </div>
+        
+        <div>
+            <input type='button' style='width:200px;height:30px;' onclick='dodgeBlank()' value='dodgeBlank'/>
         </div>
         
         <div>

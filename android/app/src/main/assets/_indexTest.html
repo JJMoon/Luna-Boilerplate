@@ -9,6 +9,9 @@
         function myFunction() {
             document.getElementById("txtt").innerHTML = "This is Experiment ";
         }
+        function logThis(obj) {
+            console.log(obj);
+        }
         function sayHello() {
             alert("Hello World")
         }
@@ -19,10 +22,19 @@
             document.getElementById("txtt").innerHTML = "Hello World";
         }
 
+        function mediaRequest() {
+            navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+
+            }).catch(function(err) {
+
+            });
+        }
+
         function showAndroidToast(toast) {
             Android.showToast(toast);
-        }
-        document.addEventListener("message", function() { document.getElementById("txtt").innerHTML = "Got Message"; });
+        } // onChange={ function() { alert(' received ')} }
+
+        //document.querySelector("input[type=file]").addEventListener('change',function() { alert(" photo "); });
         </script>
 
 
@@ -42,10 +54,27 @@
 
 
         <div className='moin-btn-file'>
-            사진 등록하기
-            <input type='file' accept='image/*'
-                onChange={ (e)=> alert(e) }/>
+            Regist Photo
+            <input type='file' accept='image/*' capture="camera"
+                   onchange="getAppMessage();"
+            />
         </div>
+
+        <div className='moin-btn-file'>
+            Capture Camera
+            <input type='file' capture="camera"
+                   onchange="javascript:alert('camera')"
+            />
+        </div>
+
+        <div className='moin-btn-file'>
+            Log Form
+            <input type='file' capture
+                   onchange="logThis(this);"
+            />
+        </div>
+
+
 
         <input type="button" value="Say hello" onClick="showAndroidToast('Hello Android!')" />
 
@@ -55,6 +84,8 @@
         <button onclick="sayHello()">Click me</button>
         
         <button onclick="over()">write</button>
+
+        <button onclick="mediaRequest()">mediaRequest</button>
         
     </body>
 

@@ -35,7 +35,7 @@
 UIWebView *webVw;
 int cnt = 0;
 
-BOOL isTest;
+BOOL isTest, loginNotYet;
 
 RCT_EXPORT_MODULE();
 
@@ -50,7 +50,6 @@ RCT_EXPORT_METHOD(setLogoutCallback:(RCTResponseSenderBlock)callback) {
 // Login Info.
 RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   RCTLogInfo(@"\n\n\n\n Obj c >> ReactIosAuth :: loginInfo \n\n .");
-  
   NSError *jsonError;
   NSData *objectData = [jStr dataUsingEncoding:NSUTF8StringEncoding];
   NSDictionary *jDic = [NSJSONSerialization JSONObjectWithData:objectData
@@ -63,39 +62,64 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   } else {
     return;
   }
+  
+  NSString *objJson = @"{ \"type\": \"EMAIL_LOGIN\", \"data\": { \"email\": \"hyochan.test@themoin.com\", \"password\": \"password12\" } }";
+  //NSString *capsuled = [NSString stringWithFormat:@"{ \"data\" : %@ }", objJson];
+  [self performSelectorOnMainThread:@selector(login:) withObject:objJson waitUntilDone:NO];
+  
   NSLog(@"   login info : %@,   dic : %@     type : %@", jStr, jDic, authType);
   NSUserDefaults *defls = [NSUserDefaults standardUserDefaults];
   [defls setObject:jStr forKey:@"authInfo"];
 }
 
 - (UIView *)view {
-  UIWebView *theWeb = [[UIWebView alloc] init];
-  NSString *filePath=[[NSBundle mainBundle]pathForResource:@"indexx" ofType:@"html" inDirectory:@"embeded"];
+  //UIWebView *theWeb = [[UIWebView alloc] init];
+  CGRect rect = CGRectMake(0, 200, 300, 500);
+  UIWebView *theWeb = [[UIWebView alloc] initWithFrame:rect];
+  
+  
+  NSString *filePath=[[NSBundle mainBundle]pathForResource:@"index" ofType:@"html" inDirectory:@"embeded"];
   NSLog(@"\n\n IOS Webview index.html ::  %@  \n\n",filePath);
   NSString *htmlstring=[NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
   [theWeb loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:filePath]]];
   // or [theWeb loadHTMLString:htmlstring baseURL:nil];
   
   theWeb.delegate = self;
-  
-  NSString *inject22 =
-  @"(function() { var originalPostMessage = window.postMessage; var patchedPostMessage = function(message, targetOrigin, transfer) { originalPostMessage(message, targetOrigin, transfer); }; patchedPostMessage.toString = function() { return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage'); }; window.postMessage = patchedPostMessage;})()";
-  
-  // NSString *inject = @"(function() { var originalPostMessage = window.postMessage; })()";
-  
-  // [theWeb stringByEvaluatingJavaScriptFromString:inject];
-  
-  NSString *jsCont = [[NSBundle mainBundle] pathForResource:inject22 ofType:@"js"];
-  //NSString *js = [NSString stringWithContentsOfFile:jsPath encoding:NSUTF8StringEncoding error:NULL];  파일일 경우.
-  [theWeb stringByEvaluatingJavaScriptFromString:jsCont];
-  
   webVw = theWeb;
+  loginNotYet = true;
+  [NSHTTPCookieStorage sharedHTTPCookieStorage].cookieAcceptPolicy = NSHTTPCookieAcceptPolicyAlways;
   
   return theWeb;
 }
 
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(nonnull NSError *)error {
+  NSLog(@"  failed ..  ");
+}
+
+- (void)webView:(UIWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(nonnull NSError *)error {
+  NSLog(@"  provisional ");
+}
+
+
+// <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
+// <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+
+
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
  navigationType:(UIWebViewNavigationType)navigationType {
+  
+  if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+    NSLog(@"  UIWebViewNavigationTypeLinkClicked  ");
+    //Allows for twitter links
+    //[self.mainWebView loadRequest:request];
+    return NO;
+  }
+  
+  if ([request.URL.absoluteString isEqualToString:@"about:blank"]) {
+    NSLog(@"  about : blank ");
+    return YES;
+  }
+  
   NSString *msg = [[request URL] absoluteString];
   NSLog(@"   Message from web : %@", msg);
   
@@ -114,7 +138,17 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   return YES;
 }
 
+- (void)login:(NSString *)auth {
+  NSString *loginStr = [NSString stringWithFormat:@"getAppMessage(%@);", auth];  // login getAppMessage
+  // NSString *loginStr = @"showAlert();"; // java script test
+  
+  NSLog(@"\n\n\n Log In ::  %@   \n\n\n", loginStr);
+  [webVw stringByEvaluatingJavaScriptFromString:loginStr];
+}
+
 - (void)logOut {
+  loginNotYet = true;
+  
   if (logoutCB == nil) {
     NSLog(@"\n\n\n logoutCB == nil \n\n\n");
   } else {
@@ -137,7 +171,24 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   NSString *jStr = [defls stringForKey:@"authInfo"];
   if (jStr != nil) {
     NSLog(@"\n\n\n    already got auth Info ::   %@ \n\n\n", jStr);
+//    NSString *loginStr = [NSString stringWithFormat:@"login(%@);", jStr];  // login
+//    NSLog(@"  %@", loginStr);
+//    [webVw stringByEvaluatingJavaScriptFromString:loginStr];
   }
+  
+  
+  if (loginNotYet) {
+    
+    NSString *objJson = @"{ \"type\": \"EMAIL_LOGIN\", \"data\": { \"email\": \"hyochan.test@themoin.com\", \"password\": \"password12\" } }";
+    //NSString *objJson = @"{\"type\":\"NAVER_LOGIN\",\"data\":{\"token\":\"AAAAOkmKc+bGeJhtc4+PvSsXLAuJnnVPaPU+UmmM2AYuc2GdpZ0B4mqCmGcPxnVn5UGxOkafFHlRjL4GEauNZSUg43Y=\"}}";
+    
+    //NSString *capsuled = [NSString stringWithFormat:@"{ \"data\" : %@ }", objJson];
+    [self performSelectorOnMainThread:@selector(login:) withObject:objJson waitUntilDone:NO];
+    loginNotYet = false;
+  }
+  
+  
+
   
   
   
@@ -179,15 +230,10 @@ RCT_EXPORT_METHOD(loginInfo:(NSString *)jStr) {
   //[webView stringByEvaluatingJavaScriptFromString:@"document.getElementById(\"txtt\").innerHTML = \"Direct Change\";"];
   
   //  window.postMessage('{\"method\":\"play\"}'
-  NSString *objJson = @"'{ \"type\": \"EMAIL_LOGIN\", \"data\": { \"email\": \"hyochan.test@themoin.com\", \"password\": \"password12\" } }'";
+  NSString *objJson = @"{ \"type\": \"EMAIL_LOGIN\", \"data\": { \"email\": \"hyochan.test@themoin.com\", \"password\": \"password12\" } }";
+  NSString *capsuled = [NSString stringWithFormat:@"{ \"data\" : %@ }", objJson];
   
-  NSString *js = [NSString stringWithFormat:@"document.postMessage(%@);", objJson];
-  
-  [webView stringByEvaluatingJavaScriptFromString:js];
-  
-  // document.getElementById("txtt").innerHTML = "Hello World";
-  
-  //NSLog(@"  check isTest %d", isTest);
+  //[self login:capsuled];
   
   
   NSLog(@"\n\n\n\n   postMessage finished  ");

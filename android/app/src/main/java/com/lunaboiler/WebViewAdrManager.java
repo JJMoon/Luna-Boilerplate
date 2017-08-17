@@ -1,45 +1,32 @@
 package com.lunaboiler;
 
-
-import android.Manifest;
-import android.content.Context;
+import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Message;
-import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
-import android.webkit.WebMessage;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.facebook.react.uimanager.events.RCTEventEmitter;
-import com.permissionrequest.MessageDialogFragment;
-import com.permissionrequest.SimpleWebServer;
+
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -50,213 +37,206 @@ import java.util.Date;
 
 public class WebViewAdrManager extends SimpleViewManager<WebView> {
 
+    private final String TAG = "WebViewAdrManager";
     private static final String TYPE_IMAGE = "image/*";
-    private static final int INPUT_FILE_REQUEST_CODE = 1;
 
-    private ValueCallback<Uri> mUploadMessage;
-    private ValueCallback<Uri[]> mFilePathCallback;
-    private String mCameraPhotoPath;
-
-    private SimpleWebServer mWebServer;
     private WebView mWebView;
 
     private PermissionRequest mPermissionRequest; //mPermissionRequest.grant(resources);
 
     public static final String REACT_CLASS = "WebViewAdr";
 
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File imageFile = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        Log.d("JAVA", "the string :: " + imageFileName + "  dir : " + storageDir);
+
+        return imageFile;
+    }
 
     @Override
     public String getName() {
         return REACT_CLASS;
     }
 
+
+
     @Override
     protected WebView createViewInstance(ThemedReactContext reactContext) {
-
-
-
-
-        final int port = 8080;
-        mWebServer = new SimpleWebServer(port, MainActivity.Inst.getResources().getAssets());
-        mWebServer.start();
         // This is for runtime permission on Marshmallow and above; It is not directly related to
         // PermissionRequest API.
 
         mWebView = new WebView(reactContext);
 
+        setUpWebViewDefaults(mWebView);
+
+        // Enables Cookies
+        CookieManager.getInstance().setAcceptCookie(true);
+
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onCreateWindow(WebView view, boolean dialog, boolean userGesture, Message resultMsg) {
+                final WebSettings settings = view.getSettings();
+                settings.setDomStorageEnabled(true);
+                settings.setJavaScriptEnabled(true);
+                settings.setAllowFileAccess(true);
+                settings.setAllowContentAccess(true);
+                view.setWebChromeClient(this);
+                WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;
+                transport.setWebView(view);
+                resultMsg.sendToTarget();
+                return false;
+            }
+
+
+
+            // For Android 5.1
+            public boolean onShowFileChooser(
+                    WebView webView, ValueCallback<Uri[]> filePathCallback,
+                    WebChromeClient.FileChooserParams fileChooserParams) {
+                if(MainActivity.mFilePathCallback != null) {
+                    MainActivity.mFilePathCallback.onReceiveValue(null);
+                }
+                MainActivity.mFilePathCallback = filePathCallback;
+
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(MainActivity.Inst.getPackageManager()) != null) {
+                    // Create the File where the photo should go
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                        takePictureIntent.putExtra("PhotoPath", MainActivity.mCameraPhotoPath);
+                    } catch (IOException ex) {
+                        // Error occurred while creating the File
+                        Log.e(TAG, "Unable to create Image File", ex);
+                    }
+
+                    // Continue only if the File was successfully created
+                    if (photoFile != null) {
+                        MainActivity.mCameraPhotoPath = "file:" + photoFile.getAbsolutePath();
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                                Uri.fromFile(photoFile));
+                    } else {
+                        takePictureIntent = null;
+                    }
+                }
+
+                Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                contentSelectionIntent.setType("image/*");
+
+                Intent[] intentArray;
+                if(takePictureIntent != null) {
+                    intentArray = new Intent[]{takePictureIntent};
+                } else {
+                    intentArray = new Intent[0];
+                }
+
+                Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+                chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+                chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+
+                MainActivity.Inst.startActivityForResult(chooserIntent, MainActivity.FILECHOOSER_RESULTCODE);
+
+                return true;
+            }
+
+            //For Android 4.1 only
+            protected void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture)
+            {
+                MainActivity.Inst.mUploadMessage = uploadMsg;
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("image/*");
+                MainActivity.Inst.startActivityForResult(Intent.createChooser(intent, "File Browser"), MainActivity.FILECHOOSER_RESULTCODE);
+            }
+
+            protected void openFileChooser(ValueCallback<Uri> uploadMsg)
+            {
+                MainActivity.Inst.mUploadMessage = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("image/*");
+                MainActivity.Inst.startActivityForResult(Intent.createChooser(i, "File Chooser"), MainActivity.FILECHOOSER_RESULTCODE);
+            }
+
+        });
+
         mWebView.setWebViewClient(new WebViewClient() {
-
             public void onPageFinished(WebView view, String url) {
-                Toast.makeText(MainActivity.Inst, "Web View : onPageFinished", Toast.LENGTH_SHORT).show();
+                String jsn = "{ \"type\": \"EMAIL_LOGIN\", \"data\": { \"email\": \"hyochan.test@themoin.com\", \"password\": \"password12\" } }";
 
-                String jsn = "'{ \"type\": \"EMAIL_LOGIN\", \"data\": { \"email\": \"hyochan.test@themoin.com\", \"password\": \"password12\" } }'";
-                String msg = "document.postMessage(" + jsn + ");";
+                //final String msg = "document.postMessage(" + jsn + ");";
+                final String msg = "javascript:getAppMessage(" + jsn + ");";  // { "\"data\" : %@ }"
+                //final String msg = "javascript:showAlert()"; // javascript
 
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                    mWebView.evaluateJavascript(msg, null);
+                    mWebView.evaluateJavascript(msg, null); // evaluateJavascript
+
+//                    runOnUiThread(new Runnable()
+//                    {
+//                        public void run()
+//                        {
+//                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+//                                //Toast.makeText(MainActivity.Inst, "onPageFinished > KitKat", Toast.LENGTH_SHORT).show();
+//                                mWebView.evaluateJavascript(msg, null); // evaluateJavascript
+//                            }
+//                        }
+//                    });
                 } else {
                     mWebView.loadUrl(msg);
                 }
             }
         });
 
+        mWebView.addJavascriptInterface(new RNWebViewInterface(MainActivity.Inst), "JSInterface");
 
+        mWebView.loadUrl("file:///android_asset/index.html");
+//        mWebView.loadUrl("file:///android_asset/_indexTest.html");
+//        mWebView.loadUrl("https://devfront.themoin.com");
 
-        mWebView.addJavascriptInterface(new RNWebViewInterface(MainActivity.Inst), "Android");
-
-//
-//        MainActivity.Inst.enforcePermission(Manifest.permission.CAMERA, );
-//                new String[]{PermissionRequest.RESOURCE_VIDEO_CAPTURE}));
-//
-//        = PackageManager.PERMISSION_GRANTED;
-
-        mWebView.getSettings().setJavaScriptEnabled(true);
-
-        //mWebView.loadUrl("file:///android_asset/index__.html");
-        mWebView.loadUrl("http://localhost:" + port + "/index__.html");
-
-        //mWebView.postWebMessage();
-
-
-        //WebView myWeb = new WebView(reactContext);
-
-//        myWeb.getSettings().setJavaScriptEnabled(true);
-//        myWeb.setWebViewClient(new WebViewClient());
-//        myWeb.getSettings().setAllowFileAccess(true);
-//        myWeb.getSettings().setAllowContentAccess(true);
-//        myWeb.getSettings().setAllowFileAccessFromFileURLs(true);
-//        myWeb.getSettings().setNeedInitialFocus(true);
-//        myWeb.getSettings().setAppCacheEnabled(true);
-//        myWeb.getSettings().setBlockNetworkImage(false);
-//        myWeb.getSettings().setBlockNetworkLoads(false);
-//        myWeb.getSettings().setDomStorageEnabled(true);
-
-//        myWeb.setWebChromeClient(new WebChromeClient() {
-//            @Override
-//            public void onCloseWindow(WebView w) {
-//                super.onCloseWindow(w);
-//
-//            }
-//
-//            @Override
-//            public boolean onCreateWindow(WebView view, boolean dialog, boolean userGesture, Message resultMsg) {
-//                final WebSettings settings = view.getSettings();
-//                settings.setDomStorageEnabled(true);
-//                settings.setJavaScriptEnabled(true);
-//                settings.setAllowFileAccess(true);
-//                settings.setAllowContentAccess(true);
-//                view.setWebChromeClient(this);
-//                WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;
-//                transport.setWebView(view);
-//                resultMsg.sendToTarget();
-//                return false;
-//            }
-//
-//            public boolean onShowFileChooser(WebView webView,
-//                                          ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-//             System.out.println("WebViewActivity A>5, OS Version : " + Build.VERSION.SDK_INT + "\t onSFC(WV,VCUB,FCP), n=3");
-//             if (mFilePathCallback != null) {
-//                 mFilePathCallback.onReceiveValue(null);
-//             }
-//             mFilePathCallback = filePathCallback;
-//             imageChooser();
-//             return true;
-//            }
-//
-//            private void imageChooser() {
-//                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                if (takePictureIntent.resolveActivity(MainActivity.Inst.getPackageManager()) != null) {
-//                    // Create the File where the photo should go
-//                    File photoFile = null;
-//                    try {
-//                     photoFile = createImageFile();
-//                        takePictureIntent.putExtra("PhotoPath", mCameraPhotoPath);
-//                    } catch (IOException ex) {
-//                        // Error occurred while creating the File
-//                        Log.e(getClass().getName(), "Unable to create Image File", ex);
-//                    }
-//
-//                    // Continue only if the File was successfully created
-//                    if (photoFile != null) {
-//                        mCameraPhotoPath = "file:" + photoFile.getAbsolutePath();
-//                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-//                                Uri.fromFile(photoFile));
-//                    } else {
-//                        takePictureIntent = null;
-//                    }
-//                }
-//            }
-//
-//            private File createImageFile() throws IOException {
-//                // Create an image file name
-//                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//                String imageFileName = "JPEG_" + timeStamp + "_";
-//                File storageDir = Environment.getExternalStoragePublicDirectory(
-//                        Environment.DIRECTORY_PICTURES);
-//                File imageFile = File.createTempFile(
-//                        imageFileName,  /* prefix */
-//                        ".jpg",         /* suffix */
-//                        storageDir      /* directory */
-//                );
-//                return imageFile;
-//            }
-//
-//
-//
-//        });
-
-
-//
-//
-//        String base = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
-//        String url = "file://"+ base + "/index.html";
-//
-//        Log.d("JAVA", "theurl :: " + base);
-//        Log.d("JAVA", "theurl :: " + url);
-//
-//        File f = new File(reactContext.getFilesDir(), url);
-//
-//        if (f.exists()) {
-//            Log.d("FILE", "  OK ");
-//        } else {
-//            Log.d("FILE", "  No .....  ");
-//        }
-
-
-
-        //myWeb.loadUrl("file:///android_asset/index__.html");
-
-//        myWeb.loadUrl("https://www.google.co.kr/");
-
-
-//        String html = "<!DOCTYPE html><html><head></head>  <body> <h1> Title </h1>  <h2> Another </h2> </body></html>";
-//        myWeb.loadDataWithBaseURL("", html, "text/html","utf-8", "");
-
+        mWebView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         return mWebView;
     }
 
-//    private void requestCameraPermission() {
-//        if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-//            MessageDialogFragment.newInstance(R.string.permission_message)
-//                    .show(getChildFragmentManager(), FRAGMENT_DIALOG);
-//        } else {
-//            requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
-//        }
-//    }
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void setUpWebViewDefaults(WebView webView) {
+        WebSettings settings = webView.getSettings();
 
-//    public void onReceiveNativeEvent(final ThemedReactContext reactContext, final MaterialCalendarView materialCalendarView) {
-//        materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
-//            @Override
-//            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-//                WritableMap event = Arguments.createMap();
-//                event.putString("date", date.getDate().toString());
-//                event.putInt("day", date.getDay());
-//                event.putInt("month", date.getMonth());
-//                event.putInt("year", date.getYear());
-//                reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(materialCalendarView.getId(), "topChange", event);
-//            }
-//        });
-//    }
+        // Enable Javascript
+        settings.setJavaScriptEnabled(true);
+
+        // Use WideViewport and Zoom out if there is no viewport defined
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+
+        // Enable pinch to zoom without the zoom buttons
+        settings.setBuiltInZoomControls(true);
+
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
+            // Hide the zoom controls for HONEYCOMB+
+            settings.setDisplayZoomControls(false);
+        }
+
+        // Enable remote debugging via chrome://inspect
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
+
+        // We set the WebViewClient to ensure links are consumed by the WebView rather
+        // than passed to a browser if it can
+        mWebView.setWebViewClient(new WebViewClient());
+    }
 
 
     @ReactProp(name = "type")

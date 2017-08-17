@@ -4,7 +4,10 @@
 	"private": true,
 	"scripts": {
 		"start": "node node_modules/react-native/local-cli/cli.js start",
-		"test": "jest"
+		"test": "jest",
+		"andr:install": "adb install -r android/app/build/outputs/apk/app-release.apk",
+		"inst": "cd node_modules/react-native/third-party",
+		"nothing": "../../scripts/ios-configure-glog.sh"
 	},
 	"dependencies": {
 		"immutability-helper": "^2.2.2",
