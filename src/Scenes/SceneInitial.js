@@ -9,7 +9,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Image, LayoutAnimation,
+import { View, StyleSheet, Text, Image, LayoutAnimation, Dimensions,
   WebView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
@@ -27,7 +27,7 @@ class SceneInitial extends Component {
     super(props);
     console.log('\n\n\n\n\n ====== ====== ====== ======  [[ SceneMain :: constructor ]] 앱 시작.....\n');
     this.props.actInit();
-    this.state = { viewCnt: 0 };
+    this.state = { viewCnt: 0, scr: Dimensions.get('window') };
   }
 
   ////////////////////////////////////////////////////   _//////////////////_   component life cycle
@@ -95,14 +95,12 @@ class SceneInitial extends Component {
   }
 
   renderMain() {
-    const { viewCnt } = this.state;
-
+    const { viewCnt, scr } = this.state;
     // {this.getAniView(viewCnt)}
-
     return (
       <View style={esty.mainContainer} >
-
         <View style={{ flex: 1 }} />
+        <Text> Screen Size : {scr.width} X {scr.height}</Text>
         {/* -------------------------  -------------------------  분리선.. ... */}
         <C.MnButton
           text={'MENU'}
